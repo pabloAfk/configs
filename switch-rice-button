@@ -1,5 +1,9 @@
 #pra usar isso, você precisa baixar o wallpaper, e em seguida, ir na pasta .local/share/rice-switcher, e aí adiciona uma pasta lá dentro com o nome que vc quiser
 #agora salva o wallpaper dentro dessa pasta que vocẽ acabou de criar como "wallpaper.png" e agora é só aproveitar, cria quantos temas quiser, só repetir esse processo
+#tá salvo em ~/.local/bin/rice-switcher.py
+#e os wallpapers em ~/.local/share/rice-switcher/as pastas com o nome do tema
+# e dentro da pasta com o nome do tema tá o wallpaper chamado de "wallpaper.png"
+
 
 #!/usr/bin/env python3
 
