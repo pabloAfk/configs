@@ -15,7 +15,12 @@
 
 /* font declared */
 * {
-    font-family: "Iosevka Nerd Font";
+    font-family: "Iosevka Nerd Font",
+                     "Noto Sans",
+                     
+                     "Noto Sans CJK JP",
+                     "DejaVu Sans",
+                     sans-serif;
     font-size: 15px;
 }
 #custom-openbracket,
