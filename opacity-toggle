@@ -1,0 +1,20 @@
+#!/bin/bash
+
+# Arquivo de config do kitty
+KITTY_CONF="$HOME/.config/kitty/kitty.conf"
+
+# Opacidades
+OPAQUE="1.0"
+TRANSLUCENT="0.2"
+
+# Verifica opacidade atual
+CURRENT=$(grep "^background_opacity" "$KITTY_CONF" | awk '{print $2}')
+
+if [ "$CURRENT" = "$OPAQUE" ]; then
+    sed -i "s/^background_opacity.*/background_opacity $TRANSLUCENT/" "$KITTY_CONF"
+else
+    sed -i "s/^background_opacity.*/background_opacity $OPAQUE/" "$KITTY_CONF"
+fi
+
+# Recarrega todas instâncias do kitty
+kitty @ set-background-opacity $(grep "^background_opacity" "$KITTY_CONF" | awk '{print $2}')
