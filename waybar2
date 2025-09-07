@@ -4,12 +4,13 @@
 @define-color text #DDD5C4;
 @define-color borders #A0907A;
 @define-color focused #D08B57;
-@define-color focused2 #BFAA80;
+@define-color focused2 rgba(255,255,255,0.5);
 @define-color color1 #7699A3;
 @define-color color2 #8D7AAE;
 @define-color color3 #78997A;
 @define-color urgent #B05A5A;
-@define-color border-translucent rgba(220, 220, 220, 0.4);
+@define-color border-translucent rgba(255, 255, 255, 0.4);
+@define-color colorWhite rgba(255, 255, 255, 0.5);
 
 
 
@@ -47,21 +48,21 @@ window#waybar.empty #window {
 .modules-left {
     margin: 10px 0 0 10px;
     padding: 0 0 0 7px;
-    background-color: @background;
+    background-color: rgba(0, 0, 0, 0.3);
     border: 2px solid @border-translucent;
     border-radius: 5px;
 }
 .modules-center {
     margin: 10px 0 0 0;
     padding: 0 10px 0 10px;
-    background-color: @background;
+    background-color: rgba(0, 0, 0, 0.3);
     border: 2px solid @border-translucent;
     border-radius: 5px;
 }
 .modules-right {
     margin: 10px 10px 0 0;
     padding: 0 10px 0 10px;
-    background-color: @background;
+    background-color: rgba(0, 0, 0, 0.3);
     border: 2px solid @border-translucent;
     border-radius: 5px;
 }
@@ -106,7 +107,7 @@ button {
 }
 #workspaces button.active {
     color: @focused2;
-    background-color: @second-background;
+    background-color: rgba (255,255,255,0.4);
 }
 #workspaces button.urgent {
     background-color: @urgent;
@@ -128,7 +129,7 @@ button {
     color: @text;
 }
 #mpris.playing {
-    background-color: @color3;
+    background-color: rgba(255,255,255,0.8);
     border-radius: 2px;
     color: @background;
 }
