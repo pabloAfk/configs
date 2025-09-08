@@ -1,3 +1,4 @@
+#~/.local/bin/kitty-opacity-toggle
 #!/bin/bash
 
 # Arquivo de config do kitty
