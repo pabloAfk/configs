@@ -12,6 +12,16 @@ require('packer').startup(function(use)
   -- Tema hacker
   use 'EdenEast/nightfox.nvim'
 
+--
+
+-- Telescope (fuzzy finder)
+use {
+  'nvim-telescope/telescope.nvim',
+  tag = '0.1.8',
+  requires = { {'nvim-lua/plenary.nvim'} }
+}
+
+
   -- Linha de status
   use 'nvim-lualine/lualine.nvim'
 
@@ -115,15 +125,26 @@ local dashboard = require("alpha.themes.dashboard")
 
 -- ASCII art hacker
 dashboard.section.header.val = {
-  [[                                                     ]],
-  [[   ███╗   ██╗███████╗██╗   ██╗██╗███╗   ███╗         ]],
-  [[   ████╗  ██║██╔════╝██║   ██║██║████╗ ████║         ]],
-  [[   ██╔██╗ ██║█████╗  ██║   ██║██║██╔████╔██║         ]],
-  [[   ██║╚██╗██║██╔══╝  ╚██╗ ██╔╝██║██║╚██╔╝██║         ]],
-  [[   ██║ ╚████║███████╗ ╚████╔╝ ██║██║ ╚═╝ ██║         ]],
-  [[   ╚═╝  ╚═══╝╚══════╝  ╚═══╝  ╚═╝╚═╝     ╚═╝         ]],
-  [[                                                     ]],
+  [[                __.;=====;.__                    ]],
+  [[            _.=+==++=++=+=+===;.                 ]],
+  [[             -=+++=+===+=+=+++++=_               ]],
+  [[        .     -=:``     `--==+=++==.             ]],
+  [[       _vi,    `            --+=++++:            ]],
+  [[      .uvnvi.       _._       -==+==+.           ]],
+  [[     .vvnvnI`    .;==|==;.     :|=||=|.          ]],
+  [[+QmQQmpvvnv; _yYsyQQWUUQQQm #QmQ#:QQQWUV$QQm.    ]],
+  [[ -QQWQWpvvowZ?.wQQQE==<QWWQ/QWQW.QQWW(: jQWQE    ]],
+  [[  -$QQQQmmU'  jQQQ@+=<QWQQ)mQQQ.mQQQC+;jWQQ@'    ]],
+  [[   -$WQ8YnI:   QWQQwgQQWV`mWQQ.jQWQQgyyWW@!      ]],
+  [[     -1vvnvv.     `~+++`        ++|+++           ]],
+  [[      +vnvnnv,                 `-|===            ]],
+  [[       +vnvnvns.           .      :=-            ]],
+  [[        -Invnvvnsi..___..=sv=.     `             ]],
+  [[          +Invnvnvnnnnnnnnvvnn;.                 ]],
+  [[            ~|Invnvnvvnvvvnnv}+`                 ]],
+  [[               -~|{*l}*|~                        ]],
 }
+
 
 -- Botões de atalho
 dashboard.section.buttons.val = {
@@ -137,3 +158,13 @@ dashboard.section.buttons.val = {
 dashboard.section.footer.val = "🚀 Bem-vindo ao seu Neovim"
 
 alpha.setup(dashboard.opts)
+
+
+-- Telescope
+require('telescope').setup {
+  defaults = {
+    layout_config = { prompt_position = "top" },
+    sorting_strategy = "ascending",
+    winblend = 10,
+  }
+}
