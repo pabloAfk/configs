@@ -1,0 +1,28 @@
+fetch('http://localhost:3000/enviar-respostas', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+        usuario: "João",
+        respostas: [1, 0, 1, 1, 0]
+    })
+})
+.then(res => res.json())
+.then(resultado => {
+    console.log(resultado); // { usuario: "João", pontuacao: 3 }
+});
+
+
+so que isso aí é front de como vai funcionar, a gente no back vai fazer tipo
+
+app.use(express.json());
+
+pro código "entender" que vai receber um json, 
+
+app.post('/enviar-respostas', (req, res) => { ... });
+
+esse app.post é pra ligar com aquele method post lá do front, o req é pra dizer que tá recebendo e o res pra dizer que vai responder
+
+const dados = req.body;
+console.log("Recebido do front:", dados);
+
+req.body pra receber o body (que o front mandou com os dados em json)
