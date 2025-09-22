@@ -1,0 +1,22 @@
+# ~/.xprofile
+
+# DBus
+if [ -z "$DBUS_SESSION_BUS_ADDRESS" ]; then
+    eval $(dbus-launch --sh-syntax)
+    export DBUS_SESSION_BUS_ADDRESS
+fi
+
+# XDG runtime (Flatpak)
+export XDG_RUNTIME_DIR="/run/user/$(id -u)"
+
+# Pulseaudio (ou PipeWire)
+pulseaudio --start
+# ou, se preferir PipeWire:
+# pipewire &
+# pipewire-pulse &
+# wireplumber &
+
+# xdg-desktop-portal
+# inicia manualmente o portal pra Flatpaks
+xdg-desktop-portal &
+xdg-desktop-portal-gtk &
