@@ -55,6 +55,8 @@
   services.displayManager.cosmic-greeter.enable = true;
   services.desktopManager.cosmic.enable = true;
 
+
+  
   #wayland
   services.desktopManager.cosmic.xwayland.enable = true;
 
@@ -65,6 +67,7 @@
    
   #clipboard
   environment.sessionVariables.COSMIC_DATA_CONTROL_ENABLED = "1";
+ 
 
   # Configure keymap in X11
   services.xserver.xkb = {
@@ -121,6 +124,11 @@
   # $ nix search wget
   environment.systemPackages = with pkgs;
  [
+ nodejs_22
+ nodePackages_latest.npm
+ ranger
+ desktop-file-utils
+ pywal
  flatpak
  cava
  acpi
@@ -130,6 +138,16 @@
  kitty
  micro 
  neovim
+ python3
+ python3Packages.pygobject3
+ adwaita-icon-theme
+ libadwaita
+ gtk4
+ swww
+ sl
+ neofetch
+ pfetch
+ ufetch
   #  vim # Do not forget to add an editor to edit configuration.nix! The Nano editor is also installed by default.
   #  wget
   ];
