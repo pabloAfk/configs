@@ -1,4 +1,5 @@
-/* dwm config.h - Versão CORRIGIDA para Pablo */
+
+#define SHCMD(cmd) { .v = (const char*[]){ "/bin/sh", "-c", cmd, NULL } }
 #include <X11/XF86keysym.h>
 
 /* Tags */
@@ -94,6 +95,19 @@ static const Key keys[] = {
     { MODKEY,                       XK_l,      setmfact,       {.f = +0.05} },
     { MODKEY,                       XK_Return, zoom,           {0} },
     { MODKEY,                       XK_Tab,    view,           {0} },
+
+
+/* Volume */
+{ 0, XF86XK_AudioLowerVolume, spawn, SHCMD("pactl set-sink-volume @DEFAULT_SINK@ -5%") },
+{ 0, XF86XK_AudioRaiseVolume, spawn, SHCMD("pactl set-sink-volume @DEFAULT_SINK@ +5%") },
+{ 0, XF86XK_AudioMute,        spawn, SHCMD("pactl set-sink-mute @DEFAULT_SINK@ toggle") },
+
+
+
+/* Brilho */
+{ 0, XF86XK_MonBrightnessUp,   spawn, SHCMD("brightnessctl set +5%") },
+{ 0, XF86XK_MonBrightnessDown, spawn, SHCMD("brightnessctl set 5%-") },
+
 
     /* Tags 1-9 */
     { MODKEY,                       XK_1,      view,           {.ui = 1 << 0} },
