@@ -1,0 +1,6 @@
+[Desktop Entry]
+Name=Sober (OPENGL)
+Exec=flatpak run --env=ROBLOX_FORCE_OPENGL=1 org.vinegarhq.Sober
+Icon=org.vinegarhq.Sober
+Type=Application
+Categories=Game;
