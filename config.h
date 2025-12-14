@@ -16,16 +16,16 @@ static const char *fonts[] = { "monospace:size=10" };
 static const char dmenufont[] = "monospace:size=10";
 
 /* Cores fixas */
-static const char normbgcolor[] = "#222222";
-static const char normfgcolor[] = "#bbbbbb";
-static const char selbgcolor[]  = "#005577";
-static const char selfgcolor[]  = "#eeeeee";
+static const char normbgcolor[] = "#0f0f0f";
+static const char normfgcolor[] = "#9e9e9e";
+static const char selbgcolor[]  = "#1b1b1b";
+static const char selfgcolor[]  = "#e0e0e0";
 
 /* Esquemas de cores */
 static const char *colors[][3] = {
     /*               fg         bg         border   */
-    [SchemeNorm] = { normfgcolor, normbgcolor, "#444444" },
-    [SchemeSel]  = { selfgcolor, selbgcolor, selbgcolor },
+    [SchemeNorm] = { normfgcolor, normbgcolor, "#262626" },
+    [SchemeSel]  = { selfgcolor, selbgcolor, "#5a5a5a" },
 };
 
 /* Layouts */
