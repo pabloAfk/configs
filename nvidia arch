@@ -1,0 +1,6 @@
+sudo pacman -S nvidia nvidia-utils nvidia-settings
+sudo pacman -S nvidia-dkms nvidia-utils nvidia-settings
+sudo pacman -S linux-headers
+sudo pacman -S linux-lts-headers
+sudo pacman -S lib32-nvidia-utils
+sudo nvidia-inst
