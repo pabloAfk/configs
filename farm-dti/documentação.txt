@@ -1,0 +1,176 @@
+📘 documentação – cálculo de tempo de farm (dress to impress)
+1️⃣ objetivo do script
+
+o script serve para estimar quanto tempo é necessário para sair de uma quantidade inicial de moedas até uma meta definida, com base em uma taxa média de ganho de moedas por minuto.
+
+2️⃣ variáveis principais
+moedas atuais (atual)
+
+quantidade de moedas que o jogador possui no momento da execução do script
+
+meta de moedas (meta)
+
+quantidade total de moedas desejada
+
+moedas faltantes
+faltam = meta - atual
+
+
+essa é a base de todo o cálculo de tempo.
+
+3️⃣ conceito central: moedas por minuto
+
+todo o sistema gira em torno de uma única métrica:
+
+taxa = moedas por minuto
+
+essa taxa pode ser obtida de duas formas:
+
+automática (estimativa)
+
+manual (benchmark)
+
+4️⃣ modo manual — benchmark de 1 minuto
+o que é benchmark
+
+benchmark é um teste prático de desempenho real.
+
+no contexto do script:
+
+o jogador farma normalmente por 1 minuto
+
+após esse tempo, observa quantas moedas ganhou
+
+esse valor é informado ao script
+
+por que 1 minuto?
+
+curto o suficiente para não cansar
+
+longo o suficiente para não distorcer a média
+
+fácil de medir com relógio ou cronômetro
+
+exemplo
+
+moedas antes: 900
+
+moedas depois de 1 min: 934
+
+taxa = 34 moedas/min
+
+
+esse valor reflete:
+
+rota
+
+spawn real
+
+moedas amarelas
+
+atenção do jogador
+
+👉 é o modo mais preciso.
+
+5️⃣ modo automático — estimativa por tipo de servidor
+
+esse modo usa valores médios pré-calculados, baseados em dados reais do mapa.
+
+dados conhecidos do jogo
+
+quantidade média de moedas no mapa: 31
+
+tempo médio de respawn: 1 min e 40 s (100 segundos)
+
+valor médio de moeda normal: ≈ 3
+
+moedas especiais (amarelas): raras, mas impactam a média
+
+cálculo teórico máximo (teto)
+31 moedas × 3 = 93 moedas a cada 100 segundos
+93 ÷ 100 × 60 ≈ 55 moedas por minuto (teto teórico)
+
+
+⚠️ ninguém alcança o teto por causa de:
+
+perca de rota
+
+velocidade do personagem
+
+distração
+
+spawn dessincronizado
+
+erro humano
+
+por isso, é usado porcentagens do teto
+
+6️⃣ níveis automáticos e porcentagens
+nível	           moedas/min      	% do teto (~55)     	descrição
+muito ruim	        15      	      ~27%            	distraído / AFK / Muita gente
+ruim	              25	            ~45%	            farm normal 
+bom               	35            	~64%     	        foco bom / pouca gente
+muito bom	          50	            ~90%	            rota perfeita + sorte
+
+esses valores:
+
+batem com testes reais
+
+não prometem milagre
+
+evitam superestimar tempo
+
+7️⃣ cálculo de tempo
+tempo em minutos
+minutos = moedas_faltantes / taxa
+
+
+exemplo:
+
+faltam = 2500 moedas
+taxa = 35 moedas/min
+
+tempo = 2500 ÷ 35 ≈ 71,42 minutos
+
+8️⃣ conversão para horas e minutos
+horas inteiras
+horas = minutos / 60
+
+
+(pega só a parte inteira)
+
+minutos restantes
+min_rest = minutos - (horas × 60)
+
+
+exemplo:
+
+71 min → 1h 11min
+
+9️⃣ limitações do cálculo (importante na doc)
+
+o script:
+
+trabalha com média
+
+não considera pausas
+
+não prevê sorte extrema (muitas moedas amarelas seguidas)
+
+não considera cansaço do jogador
+
+por isso:
+
+o valor retornado é uma estimativa, não uma promessa exata
+
+.
+
+o sistema estima tempo de farm baseado em moedas/minuto
+
+pode usar benchmark real ou estimativa automática
+
+os valores automáticos são baseados em dados reais do mapa
+
+o cálculo é simples, transparente e ajustável
+
+ideal para planejar sessões de farm sem stress
