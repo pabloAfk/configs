@@ -8,7 +8,7 @@ read -p "meta de moedas: " meta
 
 if [ "$atual" -ge "$meta" ]; then
   echo
-  echo "ja atingiu ou passou da meta"
+  echo "ja atingiu ou passou da meta 😎"
   exit 0
 fi
 
@@ -22,19 +22,24 @@ case $modo in
   1)
     echo
     echo "tipo de servidor:"
-    echo "1) bom (30 moedas/min)"
-    echo "2) ruim (20 moedas/min)"
+    echo "1) muito ruim (15 moedas/min)"
+    echo "2) ruim (25 moedas/min)"
+    echo "3) bom (35 moedas/min)"
+    echo "4) muito bom (50 moedas/min)"
     read -p "> " servidor
 
-    if [ "$servidor" -eq 1 ]; then
-      taxa=30
-    elif [ "$servidor" -eq 2 ]; then
-      taxa=20
-    else
-      echo "opcao invalida"
-      exit 1
-    fi
+    case $servidor in
+      1) taxa=15 ;;
+      2) taxa=25 ;;
+      3) taxa=35 ;;
+      4) taxa=50 ;;
+      *)
+        echo "opcao invalida"
+        exit 1
+        ;;
+    esac
     ;;
+    
   2)
     echo
     echo "farme por 1 minuto"
@@ -45,6 +50,7 @@ case $modo in
       exit 1
     fi
     ;;
+    
   *)
     echo "modo invalido"
     exit 1
