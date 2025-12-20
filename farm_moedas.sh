@@ -8,7 +8,7 @@ read -p "meta de moedas: " meta
 
 if [ "$atual" -ge "$meta" ]; then
   echo
-  echo "ja atingiu ou passou da meta 😎"
+  echo "ja atingiu ou passou da meta"
   exit 0
 fi
 
