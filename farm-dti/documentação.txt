@@ -1,7 +1,8 @@
 📘 documentação – cálculo de tempo de farm (dress to impress)
 1️⃣ objetivo do script
 
-o script serve para estimar quanto tempo é necessário para sair de uma quantidade inicial de moedas até uma meta definida, com base em uma taxa média de ganho de moedas por minuto.
+o script serve para estimar quanto tempo é necessário para sair de uma quantidade inicial de moedas
+até uma meta definida, com base em uma taxa média de ganho de moedas por minuto
 
 2️⃣ variáveis principais
 moedas atuais (atual)
@@ -14,9 +15,6 @@ quantidade total de moedas desejada
 
 moedas faltantes
 faltam = meta - atual
-
-
-essa é a base de todo o cálculo de tempo.
 
 3️⃣ conceito central: moedas por minuto
 
@@ -33,7 +31,7 @@ manual (benchmark)
 4️⃣ modo manual — benchmark de 1 minuto
 o que é benchmark
 
-benchmark é um teste prático de desempenho real.
+benchmark é um teste prático de desempenho real
 
 no contexto do script:
 
@@ -43,7 +41,7 @@ após esse tempo, observa quantas moedas ganhou
 
 esse valor é informado ao script
 
-por que 1 minuto?
+    - por que 1 minuto?
 
 curto o suficiente para não cansar
 
@@ -70,13 +68,13 @@ moedas amarelas
 
 atenção do jogador
 
-👉 é o modo mais preciso.
+👉 é o modo mais preciso
 
 5️⃣ modo automático — estimativa por tipo de servidor
 
-esse modo usa valores médios pré-calculados, baseados em dados reais do mapa.
+esse modo usa valores médios pré-calculados, baseados em dados reais do mapa
 
-dados conhecidos do jogo
+dados conhecidos do jogo (19/dez/2025)
 
 quantidade média de moedas no mapa: 31
 
