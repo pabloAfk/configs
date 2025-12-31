@@ -1,8 +1,10 @@
 📘 documentação – cálculo de tempo de farm (dress to impress)
-1️⃣ objetivo do script
+1️⃣ objetivo do script 
 
-o script serve para estimar quanto tempo é necessário para sair de uma quantidade inicial de moedas
+o script serve para estimar quanto tempo é necessário no dress to impress para sair de uma quantidade inicial de moedas
 até uma meta definida, com base em uma taxa média de ganho de moedas por minuto
+
+fiz esse script pra ajudar minha namorada linda
 
 2️⃣ variáveis principais
 moedas atuais (atual)
