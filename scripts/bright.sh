@@ -2,7 +2,7 @@
 
 export DIALOGRC="$HOME/.dialogrc"
 
-# precisa instalar o brightnessctl
+# precisa instalar o brightnessctl e o dialog
 cat > "$DIALOGRC" << 'EOF'
 screen_color = (WHITE,BLACK,ON)
 shadow_color = (BLACK,BLACK,ON)
