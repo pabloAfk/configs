@@ -1,0 +1,9 @@
+# SUPER = tecla Windows
+
+key "Super+Q" Kill
+key "Super+A" st
+key "Super+D" 9menu -label Apps -bg black -fg white -font fixed "st:st" "rox:rox" "browser:firefox" "sober:flatpak run org.vinegarhq.Sober" "-" "audio:pavucontrol" "brilho:st -e /home/dystopia/scripts/bright.sh"
+key "Super+N" rox
+key "XF86AudioRaiseVolume" exec amixer set Master 5%+
+key "XF86AudioLowerVolume" exec amixer set Master 5%-
+key "XF86AudioMute" exec amixer set Master toggle
