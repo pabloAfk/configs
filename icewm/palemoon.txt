@@ -1,0 +1,9 @@
+primeiro instala o tar e o xz (sudo xbps-install tar xz)
+instala o tarball em 
+https://www.palemoon.org/download.shtml
+extrai
+tar -xf pale...
+move a pasta pro opt
+sudo mv palemoon/ /opt/
+depois cria atalho 
+sudo ln -s /opt/palemoon/palemoon /usr/local/bin/palemoon
