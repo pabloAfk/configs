@@ -1,4 +1,21 @@
-file manager - rox
-terminal - st
-browser - pale moon
-menu - 9menu
+📦 pacotes necessários
+
+scrot
+→ prints de tela (Print e Shift+Print)
+
+st
+→ terminal (bind Super+A)
+
+9menu
+→ menu gráfico simples (Super+D)
+
+xfe
+→ usado dentro do 9menu como opção de file manager
+
+alsa-utils
+→ fornece o amixer (volume e mute)
+
+xorg-xev (opcional, mas recomendado)
+→ pra testar se as teclas XF86 e Super tão sendo reconhecidas
+
+(navegador - pale moon)
