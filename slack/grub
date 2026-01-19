@@ -1,0 +1,7 @@
+# pra instalar
+grub-install --target=x86_64-efi --efi-directory=/boot/efi --bootloader-id=grub   
+
+# pra gerar a config
+grub-mkconfig -o /boot/grub/grub.cfg   
+
+# sempre executar esse após a atualização
