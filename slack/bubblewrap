@@ -1,0 +1,2 @@
+# precisa adicionar "-std=gnu11" em uma CFLAG no .SlackBuild
+# current já vem com xdg-desktop-portal-gtk !!!!
