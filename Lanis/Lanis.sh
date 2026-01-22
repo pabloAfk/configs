@@ -1,4 +1,3 @@
-slack cat Lanis.sh
 #!/bin/bash
 
 TITLE="Lanis - documentação viva"
