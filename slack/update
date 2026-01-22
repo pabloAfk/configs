@@ -21,3 +21,7 @@ sudo cp -v /boot/initrd-generic.img /boot/efi/EFI/Slackware/initrd.gz
 ################ GRUB-CONF #########################
 
 sudo grub-mkconfig -o /boot/efi/EFI/Slackware/grub/grub.cfg
+
+
+NOTA: PRA SABER SE O KERNEL MUDOU, RODE | uname -r | E LOGO APÓS RODE | ls /lib/modules |
+      SE NO MODULES APARECER KERNEL NOVO DIFERENTE DO uname -r MUDOU SIM
