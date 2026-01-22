@@ -1,0 +1,12 @@
+link do site do slackpkgplus - https://slakfinder.org/slackpkg+.html (ler a nota do slackware 14.2)
+
+arquivo de configuração - /etc/slackpkg/slackpkgplus.conf
+  
+( TROCA A VERSÃO DO SLACKWARE NOS MIRRORS, NÃO ESQUECE )
+https://slackware.nl/people/alien/ sempre a versão current ou a versão que você estiver
+
+mirrors descomentados - multilib, alienbob e slackonly
+
+pkgs_priority - alienbob e multilib
+
+NOTA: LER O CHANGELOG AO MECHER COM SLACKONLY
