@@ -1,0 +1,23 @@
+############### ATUALIZAR O SISTEMA ###############
+
+slackpkg update
+slackpkg upgrade-all
+
+######## DESCOBRIR O COMANDO PRA ATUALIZAR ########
+
+/usr/share/mkinitrd/mkinitrd_command_generator.sh
+
+###### GERAR O INITRD (KERNEL GENERIC) ############
+
+sudo mkinitrd -c -k 6.12.66 -f ext4 -r /dev/nvme0n1p2 \
+  -m xhci-pci:ohci-pci:ehci-pci:xhci-hcd:uhci-hcd:ehci-hcd:hid:usbhid:i2c-hid:hid_generic:hid-asus:hid-cherry:hid-logitech:hid-logitech-dj:hid-logitech-hidpp:hid-lenovo:hid-microsoft:hid_multitouch:ext4 \
+  -u -o /boot/initrd-generic.img
+
+### COPIAR KERNEL PRA ESP ##########################
+
+sudo cp -v /boot/vmlinuz-generic /boot/efi/EFI/Slackware/vmlinuz
+sudo cp -v /boot/initrd-generic.img /boot/efi/EFI/Slackware/initrd.gz
+
+################ GRUB-CONF #########################
+
+sudo grub-mkconfig -o /boot/efi/EFI/Slackware/grub/grub.cfg
