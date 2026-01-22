@@ -1,0 +1,84 @@
+🧾 CHANGELOG
+v1.0 — Primeira versão funcional
+
+Estrutura básica em Bash com dialog
+
+Menu principal funcional
+
+Categorias iniciais:
+
+distros
+
+linux
+
+Conteúdo exibido diretamente
+
+Navegação simples sem hierarquia profunda
+
+Sem botão de voltar por nível
+
+Interface mínima experimental
+
+v1.1 — Organização hierárquica real
+
+Implementação de subcategorias
+
+Estrutura de chaves hierárquicas no array DATA
+
+Menus dinâmicos baseados em conteúdo
+
+Separação clara entre categorias e textos finais
+
+Melhor organização visual dos menus
+
+v1.2 — Melhorias de navegação e UX
+
+Adicionado botão “voltar” dentro das telas de texto
+
+Separação entre:
+
+voltar um nível
+
+voltar ao menu principal
+
+Melhor fluxo de navegação sem precisar sair do programa
+
+Mensagem de boas-vindas inicial
+
+v1.3 — Expansão de conteúdo e categorias
+
+Adicionada categoria ferramentas
+
+Inclusão de:
+
+nmap
+
+git
+
+ssh
+
+tmux
+
+Expansão do conteúdo de Slackware
+
+Melhoria geral na clareza dos textos
+
+Ajustes de layout nos menus
+
+v1.4 — Refino visual e organização semântica
+
+Reorganização completa da seção atualização do Slackware
+
+Layout padronizado com a seção de pacotes
+
+Separação por blocos funcionais
+
+Remoção de comandos longos impraticáveis no dialog
+
+Padronização visual entre seções
+
+Navegação por níveis estabilizada
+
+Código mais legível e modular
+
+UX muito mais fluido
