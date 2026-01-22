@@ -1,0 +1,159 @@
+📘 LANIS — DOCUMENTAÇÃO OFICIAL
+O que é a Lanis
+
+- Lanis é uma assistente offline em shell feita para organizar conhecimento técnico sobre Linux,
+sistemas operacionais, ferramentas e distros, usando uma interface em modo texto baseada em dialog, 
+no estilo do sbopkg, instaladores clássicos e ferramentas minimalistas tipo dwm
+
+- A ideia central da Lanis é funcionar como um cérebro técnico pessoal offline, onde todo o conteúdo vive diretamente dentro do código-fonte, 
+em forma de blocos organizados, isso permite: uso 100% offline, portabilidade total (só depende de bash + dialog), customização extrema
+versionamento direto do conhecimento, organização mental por categorias técnicas reais
+
+ela não tenta ser um chatbot nem IA — é um manual vivo navegável, rápido, direto, e sob controle total do usuário
+
+ -------------- Filosofia do projeto -----------------------------------------------------------------
+
+A Lanis segue três princípios principais:
+
+~ Offline-first
+Nenhuma dependência de internet, todo conhecimento deve estar embutido no código
+
+~ Conhecimento explícito > automação cega
+O objetivo não é esconder comandos, mas organizar e facilitar acesso ao raciocínio técnico real
+
+~ Interface clássica, foco em fluxo mental
+Menus simples, navegação por níveis, zero distração, zero GUI pesada
+
+-------------- Estrutura geral -----------------------------------------------------------------------
+
+A Lanis é organizada em três grandes categorias:
+
+distros → Conhecimento específico por distribuição Linux
+
+linux → Conceitos gerais do sistema operacional
+
+ferramentas → Comandos e utilitários importantes
+
+Cada categoria pode conter subcategorias, que por sua vez podem conter textos finais. A navegação é hierárquica, tipo árvore:
+
+menu principal
+→ categoria
+→ subcategoria
+→ conteúdo
+
+------------- Como funciona internamente -------------------------------------------------------------
+
+Toda a base de conhecimento vive dentro de um único array associativo Bash:
+
+declare -A DATA
+
+
+As chaves seguem um padrão hierárquico:
+
+categoria
+categoria.subcategoria
+categoria.subcategoria.topico
+
+
+Exemplo:
+
+DATA["distros"]="slackware debian arch"
+DATA["distros.slackware"]="atualizacao kernel bootloader pacotes"
+DATA["distros.slackware.atualizacao"]="texto..."
+
+
+A interface detecta automaticamente se uma chave tem subníveis ou se é um conteúdo final e decide: mostrar menu ou mostrar texto direto
+
+Isso permite: criar novos níveis sem mudar a lógica da interface, expandir infinitamente o conhecimento, manter tudo em um único arquivo Bash
+
+--------------- Interface --------------------------------------------------------------------------
+
+A interface é baseada em dialog e possui:
+
+Menu principal
+
+Submenus hierárquicos
+
+Tela de leitura de conteúdo
+
+Botão de voltar um nível
+
+Botão de voltar ao menu principal
+
+Mensagem inicial de boas-vindas
+
+Tela “sobre”
+
+A navegação é pensada para teclado e terminal puro.
+
+------------------ Requisitos -----------------------------------------------------------------------
+
+Bash
+
+dialog
+
+Nada mais.
+
+------------------ Como usar ------------------------------------------------------------------------
+
+Instale o dialog se não tiver:
+
+sudo apt install dialog
+sudo pacman -S dialog
+sudo slackpkg install dialog
+sudo xbps-install -S dialog
+
+Torne o script executável:
+
+chmod +x lanis.sh
+
+
+Execute:
+
+./lanis.sh
+
+----------------- Como adicionar conhecimento --------------------------------------------------------
+
+Basta editar o próprio arquivo e adicionar entradas no array DATA.
+
+Exemplo de nova distro:
+
+DATA["distros.fedora"]="dnf kernel selinux"
+DATA["distros.fedora.dnf"]="comandos..."
+
+
+Não é necessário alterar nenhuma função da interface — tudo é detectado automaticamente.
+
+---------------- Objetivo do projeto -----------------------------------------------------------------
+
+A Lanis não é feita para substituir documentação oficial, mas para:
+
+Servir como memória técnica pessoal
+
+Ajudar em manutenção de sistemas offline
+
+Ser um guia rápido para comandos e fluxos
+
+Organizar conhecimento de sysadmin, Linux e segurança
+
+Ser um projeto hackável, legível e minimalista
+
+É uma ferramenta para quem gosta de entender o sistema, não só clicar em botão
+
+----------------- Estado atual -----------------------------------------------------------------------
+
+Versão atual: 1.4
+
+Funcionalidades principais já implementadas:
+
+Navegação hierárquica
+
+Conteúdo offline embutido
+
+Interface amigável estilo TUI
+
+Botões de voltar por nível
+
+Organização modular de conhecimento
+
+Separação clara entre distros, Linux geral e ferramentas
