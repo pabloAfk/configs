@@ -4,4 +4,10 @@ grub-install --target=x86_64-efi --efi-directory=/boot/efi --bootloader-id=grub
 # pra gerar a config
 grub-mkconfig -o /boot/grub/grub.cfg   
 
-# sempre executar esse após a atualização
+########## APÓS ATUALIZAÇÃO #################
+mkinitrd   # se necessário
+cp /boot/vmlinuz /boot/efi/EFI/Slackware/
+cp /boot/initrd.gz /boot/efi/EFI/Slackware/
+grub-mkconfig -o /boot/efi/EFI/Slackware/grub/grub.cfg
+
+
