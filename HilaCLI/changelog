@@ -1,0 +1,42 @@
+Changelog — HilaCLI
+[0.2] — Pipeline completo de kernel/initrd/boot
+Adicionado
+
+Módulo completo de manutenção de kernel:
+
+Verificação de kernel ativo (uname -r) vs kernels instalados (/lib/modules)
+
+Integração com /usr/share/mkinitrd/mkinitrd_command_generator.sh
+
+Execução guiada do mkinitrd
+
+Cópia de kernel e initrd para a ESP
+
+Regeneração automática do grub.cfg
+
+Submenu dedicado para Kernel / Initrd / Boot
+
+Fluxo alinhado ao protocolo real de atualização Slackware
+
+Melhorado
+
+Estrutura de menus mais organizada e modular
+
+Execução mais segura com confirmações entre etapas
+
+Saídas mais verbosas e previsíveis
+-----------------------------------------------------------------------------------------------
+[0.1] — Versão inicial
+Adicionado
+
+Estrutura base do HilaCLI
+
+Menu principal e módulo de distros
+
+Suporte inicial a Slackware:
+
+slackpkg update
+
+slackpkg upgrade-all
+
+Fluxo básico de atualização do sistema
