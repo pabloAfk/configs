@@ -1,0 +1,40 @@
+ - HilaCLI
+
+HilaCLI é uma ferramenta em Bash que transforma documentação de sistemas Linux em execução guiada e segura, 
+focada principalmente em tarefas críticas como atualização de sistema, regeneração de initrd, manutenção de kernel e bootloader
+ [ menção honrosa a quem me inspirou com o nome HilaCLI: minha namorada cujo sobrenome é Hilary!! ]
+
+a ideia da HilaCLI é simples: em vez de decorar comandos perigosos ou seguir tutoriais longos, você executa tudo por meio de 
+menus interativos, com confirmações, pausas, explicações e total controle humano
+
+(não tenta substituir o administrador — amplifica o administrador)
+
+-  -  -  -  -  -  -  -  -  -  -  -  -  -   -  Filosofia  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -   - 
+
+HilaCLI segue três princípios centrais:
+
+~ Execução guiada, não automática
+
+~ Nada roda sem confirmação
+
+~ Você sempre vê exatamente o que vai ser executado
+
+-  -  -  -  -  -  -  -  -  -  -  -  -  -  Transparência total  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -
+
+Cada comando é exibido antes de rodar
+
+Nada é abstraído ou escondido
+
+Segurança acima de tudo
+
+Ideal para operações sensíveis como kernel, initrd e boot
+
+Evita erros humanos comuns em momentos de pressa ou cansaço
+
+-  -  -  -  -  -  -  -  -  -  -  -  -  -  O que a HilaCLI faz  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -  -
+
+Atualmente o HilaCLI fornece: atualização de sistema por distro, verificação de kernel ativo vs kernels instalados,
+regeneração guiada de initrd, atualização de arquivos de boot na ESP, regeneração automática de configuração do GRUB,
+menus CLI claros, pausados e confirmáveis, fluxo 100% reproduzível
+
+Tudo isso mantendo o comportamento natural de um terminal Linux real
