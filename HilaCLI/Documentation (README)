@@ -1,4 +1,4 @@
- - HilaCLI
+ - HilaCLI DOCUMENTAÇÃO OFICIAL
 
 HilaCLI é uma ferramenta em Bash que transforma documentação de sistemas Linux em execução guiada e segura, 
 focada principalmente em tarefas críticas como atualização de sistema, regeneração de initrd, manutenção de kernel e bootloader
