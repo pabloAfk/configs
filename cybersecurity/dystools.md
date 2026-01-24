@@ -15,8 +15,8 @@ imagine que um invasor altere os binários estáticos do seu busybox, ou seja:
 2. **modo Resgate**: Quando sistema está corrompido, troca o PATH e o computador usa os binários SEGUROS criados com o backup  que estão no pendrive
 3. **você pode fazer uma Reparação**: Restaurar binários corrompidos usando cópias limpas
 
-* 🎯 MODOS DE USO
-1. backup - Cria backup (sistema LIMPO)
+## 🎯 MODOS DE USO
+1. **backup - Cria backup (sistema LIMPO)**
 
 sudo ./dystools.sh /caminho/até/o/pendrive backup
 
@@ -24,7 +24,7 @@ Quando usar: Sistema 100% confiável, primeira vez
 O que faz: Copia binários do sistema → pendrive
 CUIDADO: Não use se suspeita de infecção!
 
-2. rescue - Modo resgate (sistema CORROMPIDO)
+2. **rescue - Modo resgate (sistema CORROMPIDO)**
 
 sudo ./dystools.sh /caminho/até/o/pendrive rescue
 
@@ -33,7 +33,7 @@ O que faz: Configura PATH para usar binários do pendrive
 SEGURO: Não copia NADA do sistema, apenas faz o sistema usar os binários saudáveis do pendrive
 ps: pra voltar a usar os do sistema é só fechar o terminal e abir outro
 
-3. busybox - BusyBox universal
+3. **busybox - BusyBox universal**
 
 sudo ./dystools.sh /caminho/até/o/pendrive busybox
 
