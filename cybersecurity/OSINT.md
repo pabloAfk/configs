@@ -1,10 +1,14 @@
-- instagram info: https://github.com/megadose/toutatis?tab=readme-ov-file
+- instagram info - https://github.com/megadose/toutatis?tab=readme-ov-file
 obs: alterar 
 .local/share/pipx/venvs/toutatis/lib/python3.13/site-packages/toutatis/core.py
 comentar a linha "infos["total_igtv_videos"]"
 
-- https://osintframework.com/ (melhores ferramentas em cada uso)
+- melhores ferramentas em cada uso - https://osintframework.com/
 
-- https://epieos.com/?r=1 (descobrir contas google por email)
+- descobrir contas google por email - https://epieos.com/?r=1 
 
-- https://www.predictasearch.com/ (descobrir sites que o email usa)
+- descobrir sites que aquele email tá logado - https://www.predictasearch.com/
+
+- descobrir sites que aquele nick existe - https://github.com/soxoj/maigret/blob/main/README.md
+
+- descobrir sites específicos que aquele nick existe - https://github.com/sherlock-project/sherlock
