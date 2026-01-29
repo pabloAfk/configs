@@ -14,3 +14,5 @@ comentando a linha infos["total_igtv_videos"]
 - descobrir sites que aquele nick existe - https://github.com/soxoj/maigret/blob/main/README.md
 
 - descobrir sites específicos que aquele nick existe - https://github.com/sherlock-project/sherlock
+
+- descobrir provedora telecom/estado local de um número - https://www.emobiletracker.com/trace-process.php
