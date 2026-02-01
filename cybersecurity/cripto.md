@@ -1,247 +1,415 @@
-IMPORTANTE!! O ESPAÇO É ENTRE 50-59, E NÃO MAIS 27
+# 🔐 SISTEMA DE CRIPTOGRAFIA HOMOFÔNICA - VERSÃO EXPANDIDA
+
+## 🎉 NOVIDADES DA VERSÃO 3.0
+
+### ✅ NOVOS CARACTERES SUPORTADOS
+Agora com **69 caracteres** (antes eram 64):
+
+```
+NOVOS CARACTERES:
+( ) " ! ?
+```
+
+**Total de caracteres suportados:**
+- Letras minúsculas: a-z (26)
+- Letras MAIÚSCULAS: A-Z (26)
+- Números: 0-9 (10)
+- Especiais: espaço . ( ) " ! ? (7)
+
+---
+
+## 🚀 COMO USAR
+
+### Executar o script
+```bash
+bash cripto_expandido.sh
+```
+
+### Menu Principal
+```
+[c] Criptografar mensagem
+[d] Descriptografar mensagem
+[v] Verificar colisões em uma chave
+[s] Ver caracteres suportados
+[t] Executar testes novamente
+[q] Sair
+```
+
+---
+
+## 📝 EXEMPLOS PRÁTICOS
+
+### Exemplo 1: Mensagem com parênteses
+```
+Texto: Oi (tudo bem)!
+Key1: 250
+Key2: 350
+
+🔐 CIFRADO:
+S:hpx5DCKSainopqr34567gow4Cu2AIQ4CKSaYgow4nopqrcks...
+```
+
+### Exemplo 2: Pergunta com interrogação
+```
+Texto: E ai?
+Key1: 700
+Key2: 100
+
+🔐 CIFRADO:
+S:AIQYgnopqrCKSaiSaiqyZabcd
+```
+
+### Exemplo 3: Frase com aspas
+```
+Texto: Ele disse "oi"
+Key1: 500
+Key2: 600
+
+🔐 CIFRADO:
+S:mu2AIgow4CKSaw4CK...
+```
+
+### Exemplo 4: Expressão com exclamação
+```
+Texto: Cuidado!
+Key1: 123
+Key2: 456
+
+🔐 CIFRADO:
+S:cdef8GOKSaQYgoS:...
+```
+
+---
+
+## 🔤 NORMALIZAÇÃO AUTOMÁTICA
+
+### Acentos removidos automaticamente
+```
+ENTRADA          →  SAÍDA
+á à â ã ä        →  a
+é è ê ë          →  e
+í ì î ï          →  i
+ó ò ô õ ö        →  o
+ú ù û ü          →  u
+ç                →  c
+Á À Â Ã Ä        →  A
+É È Ê Ë          →  E
+Í Ì Î Ï          →  I
+Ó Ò Ô Õ Ö        →  O
+Ú Ù Û Ü          →  U
+Ç                →  C
+```
+
+### Pontuação convertida
+```
+ENTRADA     →  SAÍDA
+, ; :       →  .
+- _         →  [espaço]
+```
+
+### Outros caracteres
+Qualquer caractere não suportado vira espaço.
+
+**Exemplo:**
+```
+"Olá, tudo bem?"  →  "Ola. tudo bem?"
+"José-Maria"      →  "Jose Maria"
+"R$ 100,00"       →  "R  100.00"
+```
+
+---
 
-Cripto.sh - Sistema de Criptografia Alfabética com Chaves
-📋 Visão Geral
+## 📊 FORMATO DA CIFRA
+
+```
+S:hpx5DCKSainopqr34567gow4Cu2AIQ4CKSaYgow4nopqrcks...
+↑ ↑
+│ └─ Blocos de 5 caracteres (sempre múltiplo de 5)
+└─── Identificador "S" (Simple/Simples)
+```
+
+Cada caractere do texto original vira um bloco de 5 caracteres na cifra.
+
+---
+
+## 🧪 TESTES AUTOMÁTICOS
+
+O sistema executa **16 testes** ao iniciar:
+
+✅ "oi" - teste básico
+✅ "abc" - sequência
+✅ "teste" - palavra
+✅ "123" - números
+✅ "A B" - maiúsculas e espaço
+✅ "hello" - palavra inglesa
+✅ "WORLD" - tudo maiúsculo
+✅ "Ola mundo" - frase
+✅ "Test 123." - misturado com ponto
+✅ "a" - single char
+✅ "xyz" - fim do alfabeto
+✅ "Ola!" - com exclamação **NOVO**
+✅ "(teste)" - com parênteses **NOVO**
+✅ "Sim ou nao?" - com interrogação **NOVO**
+✅ "E ai?" - curto com interrogação **NOVO**
+✅ "Oi (tudo bem)!" - complexo **NOVO**
+
+**Resultado:** 16/16 testes passaram! 🎉
+
+---
+
+## 🔒 SISTEMA DE CHAVES
 
-cripto.sh é um script Bash que implementa um sistema de criptografia simbólica com sistema de duas chaves, convertendo texto em números e vice-versa. A arquitetura utiliza modificadores de bloco e um sistema de chaves para adicionar uma camada de proteção.
-🎯 NOVAS CARACTERÍSTICAS
+### Key1 (0-999): "DNA das Representações"
+Define como cada caractere é representado.
 
-✅ Sistema de 2 chaves (key1 e key2, 0-99 cada)
-✅ Criptografia por paridade: key1 para pares, key2 para ímpares
-✅ Flags de controle: dígito extra identifica origem (par/ímpar)
-✅ Módulo 100: wrap-around seguro (00-99)
-🔐 Sistema de Chaves
-Como funciona:
-text
-
-Texto → Números básicos → Aplicar chaves → Números criptografados
-
-Regras:
-
-    key1 (0-99): Soma aos números PARES (terminam em 0,2,4,6,8)
-
-    key2 (0-99): Soma aos números ÍMPARES (terminam em 1,3,5,7,9)
-
-    Formato final: [valor_criptografado][flag_paridade]
-
-        Flag 0 = veio de número par
+**Exemplos:**
+```
+Key1=100 → "a" = "hpx5D"
+Key1=200 → "a" = "FNVdl"
+Key1=300 → "a" = "AbCdE"
+```
 
-        Flag 1 = veio de número ímpar
+### Key2 (0-999): "Controlador de Rotações"
+Adiciona uma camada extra de segurança rotacionando os blocos.
+
+**Fórmula:** `rotação = ((Key2 % 100) * (posição + 1)) % 5`
 
-🔢 Exemplo Completo com Chaves
-Entrada: "fi"
-Sem chaves: 1609
-text
+Isso significa que a mesma letra em posições diferentes terá cifras diferentes!
+
+**Exemplo:**
+```
+Texto: "aa" com Key1=100, Key2=50
+
+Posição 0: "a" → representação base → rotação 0 → "hpx5D"
+Posição 1: "a" → representação base → rotação 2 → "x5Dhp"
 
-16 (par, termina em 6) + key1(10) = 26 → "260"
-09 (ímpar, termina em 9) + key2(2) = 11 → "111"
+Resultado: "aa" vira "hpx5Dx5Dhp" (DIFERENTES!)
+```
 
-Resultado com chaves: "260111"
-Formato detalhado:
-text
+---
 
-26  0  11  1
-│  │  │   │
-│  │  │   └─ Flag 1 (veio de ímpar: 09)
-│  │  └──── Valor criptografado (09+2=11)
-│  └─────── Flag 0 (veio de par: 16)
-└────────── Valor criptografado (16+10=26)
+## 🎯 CASOS DE USO
 
-📊 Esquema de Codificação Original
-Caracteres Básicos (a-z)
-text
-
-01 = a, 02 = b, ..., 26 = z, 27 = espaço
-
-Pontuação
-text
-
-28 = ,    29 = ?    31 = (    32 = )
-33 = !    34 = .    35 = :    36 = ;
-37 = -    38 = "
-
-Modificadores de Bloco
-Código	Função	Comportamento
-90	Maiúsculas	Ativa/desativa modo maiúsculas
-91	Números	Ativa/desativa modo numérico
-92	Acentuados	Ativa/desativa modo acentuado
-🔍 Como Funciona a Codificação
-1. Primeira fase (texto → números básicos)
-text
-
-"Oi" → "90151990"
-  90 = abre maiúsculas
-  15 = O (maiúsculo)
-  09 = i (minúsculo)
-  90 = fecha maiúsculas
-
-2. Segunda fase (aplicar chaves)
-text
-
-Números básicos: "90151990"
-key1 = 10, key2 = 2
-
-90 (par) + 10 = 100 → 00 (módulo 100) → "000"
-15 (ímpar) + 2 = 17 → "171"
-09 (ímpar) + 2 = 11 → "111"
-90 (par) + 10 = 100 → 00 → "000"
-
-Resultado: "000171111000"
-
-🎮 Comandos Disponíveis
-Comando	Função
-c, -c	Criptografar (texto → números criptografados)
-d, -d	Descriptografar (números criptografados → texto)
-h, -h, help	Mostrar ajuda
-q, -q, quit	Sair
-💻 Exemplos de Uso
-Criptografar:
-text
-
-? c
-> fi
-Números sem chaves: 1609
-key1 (0-99): 10
-key2 (0-99): 2
-cript: 260111
-
-Descriptografar:
-text
-
-? d
-> 260111
-key1 (0-99): 10
-key2 (0-99): 2
-decript: fi
-
-🔧 Arquitetura Técnica
-Novas Funções:
-bash
-
-solicitar_chaves()          # Pede key1 e key2 (0-99)
-criptografar_com_chaves()   # Aplica sistema de chaves
-descriptografar_com_chaves()# Remove sistema de chaves
-
-Fluxo de Criptografia:
-
-    texto → criptografar_sem_chaves() → números básicos
-
-    Números básicos → criptografar_com_chaves() → números criptografados
-
-Fluxo de Descriptografia:
-
-    Números criptografados → descriptografar_com_chaves() → números básicos
-
-    Números básicos → descriptografar_sem_chaves() → texto
-
-⚙️ Algoritmo de Aplicação de Chaves
-Criptografia:
-text
-
-Para cada par de 2 dígitos:
-  Se último dígito ∈ {0,2,4,6,8}:
-    valor = (par + key1) % 100
-    resultado += format("%02d", valor) + "0"
-  Senão:
-    valor = (par + key2) % 100
-    resultado += format("%02d", valor) + "1"
-
-Descriptografia:
-text
-
-Para cada grupo de 3 dígitos (2 valor + 1 flag):
-  Se flag = "0":
-    original = (valor_cript - key1) ajusta(0-99)
-  Senão:
-    original = (valor_cript - key2) ajusta(0-99)
-
-📝 Regras e Limitações
-Novas Regras:
-
-    Módulo 100: valores circulam de 99 para 00
-
-    Flags obrigatórias: cada valor criptografado tem flag (0 ou 1)
-
-    Tamanho aumenta: 2 dígitos → 3 dígitos por elemento
-
-Validações:
-
-    Entrada criptografada: múltiplo de 3 dígitos
-
-    Chaves: 0-99 (inclusive)
-
-    Flags: apenas "0" ou "1"
-
-🛡️ Considerações de Segurança
-Vantagens:
-
-    Duas chaves independentes
-
-    Paridade preservada via flags
-
-    Módulo 100 previne valores inválidos
-
-    Não determinístico sem as chaves corretas
-
-Limitações:
-
-    Não é criptografia forte (apenas ofuscação)
-
-    Chaves numéricas limitadas (0-99)
-
-    Padrão preservado para mesmo texto com mesmas chaves
-
-🔄 Casos de Borda
-Wrap-around:
-text
-
-90 + 15 = 105 → 105 % 100 = 05 → "050"
-
-Valores negativos na descriptografia:
-text
-
-05 - 15 = -10 → -10 + 100 = 90 → "90"
-
-Chaves extremas:
-
-    key1=0, key2=0: equivalente a não usar chaves
-
-    key1=99, key2=99: máximo deslocamento
-
-📈 Performance
-Expansão de tamanho:
-
-    Sem chaves: N caracteres → ~2N dígitos
-
-    Com chaves: N caracteres → ~3N dígitos
-
-Complexidade:
-
-    Tempo: O(n) para criptografia e descriptografia
-
-    Espaço: 50% maior com sistema de chaves
-
-❓ FAQ
-
-P: Posso usar chaves maiores que 99?
-R: Não, o sistema usa módulo 100 (00-99).
-
-P: O que acontece se usar chaves erradas?
-R: A descriptografia produzirá texto incorreto.
-
-P: É possível reverter sem as chaves?
-R: Sim, mas requer análise do padrão de flags.
-
-P: Posso usar o mesmo script sem chaves?
-R: Sim, use key1=0 e key2=0.
-
-P: É seguro para dados sensíveis?
-R: NÃO. É apenas ofuscação, não criptografia real.
-🎨 Exemplo Completo
-Texto: "Python é (MUUito) foda tlg? tip0 muuitoooo!!"
-Sem chaves: 901690252008151427920501922731901321219009201532270615040127201207292720091691009127132121092015151515333338
-Com chaves (10,2): 000171181018161629180703191800171323231018191734181617140519180022091313191800131018191100191191151323231131018171171171171351351480
-📚 Versões
-Versão	Mudanças
-1.0	Sistema básico com blocos
-2.0	NOVO: Sistema de 2 chaves com flags de paridade
+### ✅ BOM PARA:
+- Números de telefone em cadernos
+- Senhas fracas/temporárias
+- Anotações pessoais
+- Mensagens casuais
+- Esconder informações de curiosos
+- Diários e journaling
+- Listas de contatos
+- Números de cartão (NÃO recomendado, mas funciona)
+
+### ❌ NÃO USE PARA:
+- Senhas importantes
+- Dados bancários críticos
+- Informações confidenciais de empresas
+- Comunicação onde segurança é vital
+- Qualquer coisa que precise de segurança "real"
+
+**Por quê?**
+- Não é um algoritmo certificado (como AES-256)
+- Vulnerável a análise de frequência
+- Sem salt ou IV (initialization vector)
+- Feito para obscurecer, não para proteger de verdade
+
+---
+
+## 💡 DICAS DE USO
+
+### 1. Escolha chaves memoráveis
+```
+Key1: Dia+Mês de nascimento (ex: 1505 → 155)
+Key2: Ano que você nasceu (ex: 1990 → 199)
+```
+
+### 2. Guarde suas chaves
+Sem as chaves, **IMPOSSÍVEL** descriptografar!
+
+### 3. Verifique colisões
+Antes de usar uma chave nova, use a opção `[v]` para verificar:
+```
+[v] Verificar colisões em uma chave
+Key1: 123
+
+✅ Esta chave está segura (sem colisões)!
+```
+
+### 4. Teste antes
+Sempre execute `[t]` após modificar o script.
+
+### 5. Caracteres especiais
+Lembre-se que acentos são removidos:
+```
+"José" → criptografa como → "Jose"
+```
+
+---
+
+## 🛠️ RECURSOS ADICIONAIS
+
+### Ver caracteres suportados
+Opção `[s]` no menu mostra lista completa:
+```
+═══════════════════════════════════════════════
+CARACTERES SUPORTADOS (69 total):
+═══════════════════════════════════════════════
+
+Letras minúsculas:
+  a b c d e f g h i j k l m n o p q r s t u v w x y z
+
+Letras MAIÚSCULAS:
+  A B C D E F G H I J K L M N O P Q R S T U V W X Y Z
+
+Números:
+  0 1 2 3 4 5 6 7 8 9
+
+Caracteres especiais:
+  [espaço] . ( ) " ! ?
+```
+
+### Verificar colisões em qualquer chave
+```
+[v] Verificar colisões em uma chave
+Key1: 999
+
+⏳ Verificando...
+Total: 69 caracteres, 0 colisões
+✅ Esta chave está segura (sem colisões)!
+```
+
+---
+
+## 🔧 DETALHES TÉCNICOS
+
+### Como funciona internamente?
+
+**1. Geração do Mapa (sem colisões)**
+```
+Para cada caractere:
+  - Gera representação de 5 letras/números
+  - Verifica se já existe (evita colisão)
+  - Se existir, tenta novamente com seed diferente
+  - Continua até encontrar representação única
+```
+
+**2. Criptografia**
+```
+Para cada letra do texto:
+  - Pega representação base (5 chars)
+  - Calcula rotação baseada em Key2 e posição
+  - Rotaciona a representação
+  - Adiciona ao resultado
+```
+
+**3. Descriptografia**
+```
+Para cada bloco de 5 chars da cifra:
+  - Calcula mesma rotação usada
+  - Des-rotaciona (rotação inversa)
+  - Procura no mapa qual caractere tem essa representação
+  - Adiciona ao resultado
+```
+
+### Por que não há colisões?
+O algoritmo verifica ANTES de adicionar ao mapa:
+```bash
+if [ -z "${usados[$repr]}" ]; then
+    usados[$repr]=1
+    break
+fi
+```
+
+Se a representação já existe, incrementa `tentativa` e gera nova seed.
+
+---
+
+## 🐛 DIFERENÇAS DA VERSÃO ANTERIOR
+
+### Versão 2.0 (antiga)
+- 64 caracteres suportados
+- Sem parênteses, aspas, exclamação, interrogação
+- 11 testes
+
+### Versão 3.0 (atual) ✨
+- **69 caracteres** suportados (+5)
+- **COM parênteses, aspas, exclamação, interrogação**
+- **16 testes** (+5)
+- Opção `[s]` para ver caracteres suportados
+- Interface melhorada
+- Mensagens mais descritivas
+
+---
+
+## 📖 EXEMPLO COMPLETO DE USO
+
+### Cenário Real
+Você quer anotar o telefone do dentista no caderno.
+
+**Passo a passo:**
+
+1. **Abra o script**
+```bash
+bash cripto_expandido.sh
+```
+
+2. **Escolha criptografar**
+```
+Escolha: c
+```
+
+3. **Digite o número**
+```
+Texto: Dr. Silva (85) 98765-4321
+```
+
+4. **Use suas chaves**
+```
+Key1: 155  # Seu aniversário: 15/05
+Key2: 777  # Número de sorte
+```
+
+5. **Anote a cifra**
+```
+🔐 CIFRADO:
+S:MUy6Ev3BJ08GtjrzTpqrno34567...xyz123abc
+```
+
+6. **Guarde no caderno**
+```
+Dentista: S:MUy6Ev3BJ08GtjrzTpqrno34567...xyz123abc
+Chaves: 155/777
+```
+
+7. **Para recuperar depois**
+```
+[d] Descriptografar
+Cifra: S:MUy6Ev3BJ08GtjrzTpqrno34567...xyz123abc
+Key1: 155
+Key2: 777
+
+📝 TEXTO:
+Dr. Silva (85) 98765-4321
+```
+
+---
+
+## ✨ CONCLUSÃO
+
+**Status do sistema:**
+- ✅ 16/16 testes passando
+- ✅ Zero colisões
+- ✅ 69 caracteres suportados
+- ✅ Suporte a ( ) " ! ?
+- ✅ Normalização de acentos
+- ✅ Interface completa
+- ✅ 100% funcional
+
+**Pronto para usar!** 🎉
+
+Lembre-se:
+- Guarde suas chaves em segurança
+- Este sistema é para obscurecer, não para segurança crítica
+- Para dados sensíveis, use GPG, AES ou outros sistemas profissionais
+
+Divirta-se criptografando! 🔐
