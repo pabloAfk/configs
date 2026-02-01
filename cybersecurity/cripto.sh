@@ -4,12 +4,14 @@
 # Nova arquitetura com modificadores de bloco e sistema de 2 chaves
 #
 # BÁSICO:
-#   a-z = 01-26, espaço = 27
+#   a-z = 01-26
+#   espaço = 50-59 (aleatório dentro desta faixa)
 #
-# MODIFICADORES DE BLOCO:
-#   90 = início/fim de MAIÚSCULAS
-#   91 = início/fim de NÚMEROS
-#   92 = início/fim de ACENTUADOS
+# MODIFICADORES DE BLOCO (ESPECIAIS - não recebem chaves):
+#   60 = início/fim de MAIÚSCULAS
+#   61 = início/fim de NÚMEROS
+#   62 = início/fim de ACENTUADOS
+#   Espaço = 50-59 (qualquer número nesta faixa)
 #
 # PONTUAÇÃO:
 #   , = 28, ? = 29, ( = 31, ) = 32, ! = 33, . = 34
@@ -20,6 +22,7 @@
 #   key2 (0-99): soma aos números ÍMPARES (último dígito ímpar)
 #   Formato: [valor_criptografado][flag_paridade]
 #   Flag: 0=veio de par, 1=veio de ímpar
+#   ESPECIAIS (50-62): não recebem chaves, ficam como estão
 
 show_help() {
     echo "Uso: ./cripto.sh"
@@ -31,29 +34,31 @@ show_help() {
     echo ""
     echo "Formato de codificação:"
     echo "  Letras minúsculas: 01-26 (a=01, b=02, ..., z=26)"
-    echo "  Espaço: 27"
+    echo "  Espaço: 50-59 (aleatório dentro desta faixa)"
     echo "  Pontuação: , = 28, ? = 29, ( = 31, ) = 32, ! = 33, . = 34"
     echo "             : = 35, ; = 36, - = 37, \" = 38"
     echo ""
-    echo "  Modificadores de bloco:"
-    echo "    90...90 = MAIÚSCULAS"
-    echo "    91...91 = NÚMEROS"
-    echo "    92...92 = ACENTUADOS"
+    echo "  Modificadores de bloco (ESPECIAIS - não recebem chaves):"
+    echo "    60...60 = MAIÚSCULAS"
+    echo "    61...61 = NÚMEROS"
+    echo "    62...62 = ACENTUADOS"
     echo ""
     echo "SISTEMA DE CHAVES:"
     echo "  key1 (0-99): soma aos números PARES (terminam em 0,2,4,6,8)"
     echo "  key2 (0-99): soma aos números ÍMPARES (terminam em 1,3,5,7,9)"
     echo "  Formato final: [valor][flag] onde flag=0(par) ou 1(ímpar)"
+    echo "  ESPECIAIS (50-62): não recebem chaves, mantêm valor original"
     echo ""
     echo "Exemplos (sem chaves):"
     echo "  'oi' → '1509'"
-    echo "  'Oi' → '90151990'"
-    echo "  '123' → '91010203091'"
-    echo "  'é' → '92050192'"
+    echo "  'Oi' → '60151960'"
+    echo "  '123' → '61010203061'"
+    echo "  'é' → '62050162'"
     echo ""
     echo "Exemplo com chaves (key1=10, key2=2):"
     echo "  'fi' (1609) → '2600291'"
     echo "  16(par)+10=26→'260', 09(ímpar)+2=11→'111'"
+    echo "  Espaço (ex: 53) → '53' (especial, não recebe chave)"
 }
 
 # Mapa de caracteres acentuados para suas versões base
@@ -160,6 +165,12 @@ aplicar_acento() {
     echo "$resultado"
 }
 
+# Gera um número aleatório entre 50-59 para espaço
+gerar_espaco() {
+    local random_num=$((RANDOM % 10 + 50))  # 50-59
+    echo "$random_num"
+}
+
 # Função para solicitar chaves
 solicitar_chaves() {
     while true; do
@@ -204,23 +215,31 @@ criptografar_com_chaves() {
     # Processa os números em pares de 2 dígitos
     while [ $i -lt ${#numeros} ]; do
         local par="${numeros:$i:2}"
-        local ultimo_digito="${par:1:1}"
+        local valor_par=$((10#$par))
 
-        # Determina paridade pelo último dígito
-        if [[ "$ultimo_digito" =~ [02468] ]]; then
-            # PAR: soma key1
-            local valor=$((10#$par + key1))
-            valor=$((valor % 100))  # Módulo 100 (00-99)
-
-            # Formata com 2 dígitos e adiciona flag 0
-            resultado="${resultado}$(printf "%02d" $valor)0"
+        # Verifica se é ESPECIAL (50-62)
+        if [ $valor_par -ge 50 ] && [ $valor_par -le 62 ]; then
+            # É ESPECIAL: não aplica chave, apenas repete
+            resultado="${resultado}${par}"
         else
-            # ÍMPAR: soma key2
-            local valor=$((10#$par + key2))
-            valor=$((valor % 100))  # Módulo 100 (00-99)
+            local ultimo_digito="${par:1:1}"
 
-            # Formata com 2 dígitos e adiciona flag 1
-            resultado="${resultado}$(printf "%02d" $valor)1"
+            # Determina paridade pelo último dígito
+            if [[ "$ultimo_digito" =~ [02468] ]]; then
+                # PAR: soma key1
+                local valor=$((valor_par + key1))
+                valor=$((valor % 100))  # Módulo 100 (00-99)
+
+                # Formata com 2 dígitos e adiciona flag 0
+                resultado="${resultado}$(printf "%02d" $valor)0"
+            else
+                # ÍMPAR: soma key2
+                local valor=$((valor_par + key2))
+                valor=$((valor % 100))  # Módulo 100 (00-99)
+
+                # Formata com 2 dígitos e adiciona flag 1
+                resultado="${resultado}$(printf "%02d" $valor)1"
+            fi
         fi
 
         i=$((i+2))
@@ -240,37 +259,46 @@ descriptografar_com_chaves() {
     # Remove qualquer caractere não numérico
     numeros=$(echo "$numeros" | tr -cd '0-9')
 
-    # Valida se tem múltiplo de 3 dígitos (2 dígitos + 1 flag)
-    if [ $((${#numeros} % 3)) -ne 0 ]; then
-        echo "[ERRO] Número de dígitos incorreto! Deve ser múltiplo de 3." >&2
-        return 1
-    fi
-
-    # Processa os números em grupos de 3 dígitos
+    # Processa os números
     while [ $i -lt ${#numeros} ]; do
-        local valor_cript="${numeros:$i:2}"
-        local flag="${numeros:$((i+2)):1}"
-        local valor_original
+        # Verifica se próximo grupo é ESPECIAL (2 dígitos) ou NORMAL (3 dígitos)
+        local primeiro_par="${numeros:$i:2}"
+        local valor_primeiro=$((10#$primeiro_par))
 
-        # Determina operação pela flag
-        if [ "$flag" = "0" ]; then
-            # Veio de PAR: subtrai key1
-            valor_original=$((10#$valor_cript - key1))
+        if [ $valor_primeiro -ge 50 ] && [ $valor_primeiro -le 62 ]; then
+            # É ESPECIAL: apenas 2 dígitos
+            resultado="${resultado}${primeiro_par}"
+            i=$((i+2))
         else
-            # Veio de ÍMPAR: subtrai key2
-            valor_original=$((10#$valor_cript - key2))
+            # É NORMAL: 3 dígitos (2 valor + 1 flag)
+            if [ $((i+2)) -ge ${#numeros} ]; then
+                echo "[ERRO] Fim inesperado dos dados!" >&2
+                break
+            fi
+
+            local valor_cript="${numeros:$i:2}"
+            local flag="${numeros:$((i+2)):1}"
+            local valor_original
+
+            # Determina operação pela flag
+            if [ "$flag" = "0" ]; then
+                # Veio de PAR: subtrai key1
+                valor_original=$((10#$valor_cript - key1))
+            else
+                # Veio de ÍMPAR: subtrai key2
+                valor_original=$((10#$valor_cript - key2))
+            fi
+
+            # Ajusta para faixa 00-99 (módulo 100)
+            while [ $valor_original -lt 0 ]; do
+                valor_original=$((valor_original + 100))
+            done
+            valor_original=$((valor_original % 100))
+
+            # Formata com 2 dígitos
+            resultado="${resultado}$(printf "%02d" $valor_original)"
+            i=$((i+3))
         fi
-
-        # Ajusta para faixa 00-99 (módulo 100)
-        while [ $valor_original -lt 0 ]; do
-            valor_original=$((valor_original + 100))
-        done
-        valor_original=$((valor_original % 100))
-
-        # Formata com 2 dígitos
-        resultado="${resultado}$(printf "%02d" $valor_original)"
-
-        i=$((i+3))
     done
 
     echo "$resultado"
@@ -294,11 +322,11 @@ criptografar_sem_chaves() {
         if [ -n "$mapa" ]; then
             # É um caractere acentuado
             # Fecha blocos anteriores se necessário
-            [ $em_maiusculas -eq 1 ] && resultado="${resultado}90" && em_maiusculas=0
-            [ $em_numeros -eq 1 ] && resultado="${resultado}91" && em_numeros=0
+            [ $em_maiusculas -eq 1 ] && resultado="${resultado}60" && em_maiusculas=0
+            [ $em_numeros -eq 1 ] && resultado="${resultado}61" && em_numeros=0
 
             # Abre bloco de acentuados se necessário
-            [ $em_acentuados -eq 0 ] && resultado="${resultado}92" && em_acentuados=1
+            [ $em_acentuados -eq 0 ] && resultado="${resultado}62" && em_acentuados=1
 
             # Extrai base e acento
             local base=$(echo "$mapa" | cut -d' ' -f1)
@@ -315,39 +343,47 @@ criptografar_sem_chaves() {
 
         elif [[ "$char" =~ ^[a-z]$ ]]; then
             # Letra minúscula
-            [ $em_maiusculas -eq 1 ] && resultado="${resultado}90" && em_maiusculas=0
-            [ $em_numeros -eq 1 ] && resultado="${resultado}91" && em_numeros=0
-            [ $em_acentuados -eq 1 ] && resultado="${resultado}92" && em_acentuados=0
+            [ $em_maiusculas -eq 1 ] && resultado="${resultado}60" && em_maiusculas=0
+            [ $em_numeros -eq 1 ] && resultado="${resultado}61" && em_numeros=0
+            [ $em_acentuados -eq 1 ] && resultado="${resultado}62" && em_acentuados=0
 
             local num=$(printf "%02d" $(( $(printf "%d" "'$char") - 96 )))
             resultado="${resultado}${num}"
 
         elif [[ "$char" =~ ^[A-Z]$ ]]; then
             # Letra maiúscula
-            [ $em_numeros -eq 1 ] && resultado="${resultado}91" && em_numeros=0
-            [ $em_acentuados -eq 1 ] && resultado="${resultado}92" && em_acentuados=0
-            [ $em_maiusculas -eq 0 ] && resultado="${resultado}90" && em_maiusculas=1
+            [ $em_numeros -eq 1 ] && resultado="${resultado}61" && em_numeros=0
+            [ $em_acentuados -eq 1 ] && resultado="${resultado}62" && em_acentuados=0
+            [ $em_maiusculas -eq 0 ] && resultado="${resultado}60" && em_maiusculas=1
 
             local num=$(printf "%02d" $(( $(printf "%d" "'$char") - 64 )))
             resultado="${resultado}${num}"
 
         elif [[ "$char" =~ ^[0-9]$ ]]; then
             # Número
-            [ $em_maiusculas -eq 1 ] && resultado="${resultado}90" && em_maiusculas=0
-            [ $em_acentuados -eq 1 ] && resultado="${resultado}92" && em_acentuados=0
-            [ $em_numeros -eq 0 ] && resultado="${resultado}91" && em_numeros=1
+            [ $em_maiusculas -eq 1 ] && resultado="${resultado}60" && em_maiusculas=0
+            [ $em_acentuados -eq 1 ] && resultado="${resultado}62" && em_acentuados=0
+            [ $em_numeros -eq 0 ] && resultado="${resultado}61" && em_numeros=1
 
             local num=$(printf "%02d" "$char")
             resultado="${resultado}${num}"
 
+        elif [[ "$char" == " " ]]; then
+            # ESPAÇO - gera número aleatório entre 50-59
+            [ $em_maiusculas -eq 1 ] && resultado="${resultado}60" && em_maiusculas=0
+            [ $em_numeros -eq 1 ] && resultado="${resultado}61" && em_numeros=0
+            [ $em_acentuados -eq 1 ] && resultado="${resultado}62" && em_acentuados=0
+
+            local espaco=$(gerar_espaco)
+            resultado="${resultado}${espaco}"
+
         else
             # Caractere especial - fecha todos os blocos
-            [ $em_maiusculas -eq 1 ] && resultado="${resultado}90" && em_maiusculas=0
-            [ $em_numeros -eq 1 ] && resultado="${resultado}91" && em_numeros=0
-            [ $em_acentuados -eq 1 ] && resultado="${resultado}92" && em_acentuados=0
+            [ $em_maiusculas -eq 1 ] && resultado="${resultado}60" && em_maiusculas=0
+            [ $em_numeros -eq 1 ] && resultado="${resultado}61" && em_numeros=0
+            [ $em_acentuados -eq 1 ] && resultado="${resultado}62" && em_acentuados=0
 
             case "$char" in
-                " ") resultado="${resultado}27" ;;
                 ",") resultado="${resultado}28" ;;
                 "?") resultado="${resultado}29" ;;
                 "(") resultado="${resultado}31" ;;
@@ -364,9 +400,9 @@ criptografar_sem_chaves() {
     done
 
     # Fecha blocos abertos
-    [ $em_maiusculas -eq 1 ] && resultado="${resultado}90"
-    [ $em_numeros -eq 1 ] && resultado="${resultado}91"
-    [ $em_acentuados -eq 1 ] && resultado="${resultado}92"
+    [ $em_maiusculas -eq 1 ] && resultado="${resultado}60"
+    [ $em_numeros -eq 1 ] && resultado="${resultado}61"
+    [ $em_acentuados -eq 1 ] && resultado="${resultado}62"
 
     echo "$resultado"
 }
@@ -392,80 +428,102 @@ descriptografar_sem_chaves() {
     # Processa os números
     while [ $i -lt ${#numeros} ]; do
         local par="${numeros:$i:2}"
+        local valor_par=$((10#$par))
 
-        case "$par" in
-            90)
-                # Modificador de maiúsculas
-                em_maiusculas=$((1 - em_maiusculas))
+        # Verifica se é ESPAÇO (50-59)
+        if [ $valor_par -ge 50 ] && [ $valor_par -le 59 ]; then
+            resultado="${resultado} "
+            i=$((i+2))
+
+        # Verifica se é MODIFICADOR DE BLOCO
+        elif [ "$par" = "60" ]; then
+            # Modificador de maiúsculas
+            em_maiusculas=$((1 - em_maiusculas))
+            i=$((i+2))
+        elif [ "$par" = "61" ]; then
+            # Modificador de números
+            em_numeros=$((1 - em_numeros))
+            i=$((i+2))
+        elif [ "$par" = "62" ]; then
+            # Modificador de acentuados
+            em_acentuados=$((1 - em_acentuados))
+            i=$((i+2))
+
+        # Verifica pontuação
+        elif [ "$par" = "28" ]; then
+            resultado="${resultado},"
+            i=$((i+2))
+        elif [ "$par" = "29" ]; then
+            resultado="${resultado}?"
+            i=$((i+2))
+        elif [ "$par" = "31" ]; then
+            resultado="${resultado}("
+            i=$((i+2))
+        elif [ "$par" = "32" ]; then
+            resultado="${resultado})"
+            i=$((i+2))
+        elif [ "$par" = "33" ]; then
+            resultado="${resultado}!"
+            i=$((i+2))
+        elif [ "$par" = "34" ]; then
+            resultado="${resultado}."
+            i=$((i+2))
+        elif [ "$par" = "35" ]; then
+            resultado="${resultado}:"
+            i=$((i+2))
+        elif [ "$par" = "36" ]; then
+            resultado="${resultado};"
+            i=$((i+2))
+        elif [ "$par" = "37" ]; then
+            resultado="${resultado}-"
+            i=$((i+2))
+        elif [ "$par" = "38" ]; then
+            resultado="${resultado}\""
+            i=$((i+2))
+
+        # Letras e números
+        elif [ $valor_par -ge 1 ] && [ $valor_par -le 26 ]; then
+            if [ $em_numeros -eq 1 ]; then
+                # É um número dentro do bloco 61...61
+                resultado="${resultado}${valor_par}"
                 i=$((i+2))
-                ;;
-            91)
-                # Modificador de números
-                em_numeros=$((1 - em_numeros))
-                i=$((i+2))
-                ;;
-            92)
-                # Modificador de acentuados
-                em_acentuados=$((1 - em_acentuados))
-                i=$((i+2))
-                ;;
-            27) resultado="${resultado} "; i=$((i+2)) ;;
-            28) resultado="${resultado},"; i=$((i+2)) ;;
-            29) resultado="${resultado}?"; i=$((i+2)) ;;
-            31) resultado="${resultado}("; i=$((i+2)) ;;
-            32) resultado="${resultado})"; i=$((i+2)) ;;
-            33) resultado="${resultado}!"; i=$((i+2)) ;;
-            34) resultado="${resultado}."; i=$((i+2)) ;;
-            35) resultado="${resultado}:"; i=$((i+2)) ;;
-            36) resultado="${resultado};"; i=$((i+2)) ;;
-            37) resultado="${resultado}-"; i=$((i+2)) ;;
-            38) resultado="${resultado}\""; i=$((i+2)) ;;
-            00|01|02|03|04|05|06|07|08|09|10|11|12|13|14|15|16|17|18|19|20|21|22|23|24|25|26)
-                local num=$((10#$par))
-
-                if [ $em_numeros -eq 1 ]; then
-                    # É um número
-                    resultado="${resultado}${num}"
-                    i=$((i+2))
-                elif [ $em_acentuados -eq 1 ]; then
-                    # É uma letra acentuada - precisa ler 4 dígitos (base + acento)
-                    if [ $((i+3)) -ge ${#numeros} ]; then
-                        echo "[ERRO] Bloco acentuado incompleto!" >&2
-                        break
-                    fi
-
-                    local base_num="${numeros:$i:2}"
-                    local acento_num="${numeros:$((i+2)):2}"
-
-                    # Converte base para letra
-                    local base_val=$((10#$base_num))
-                    if [ $base_val -ge 1 ] && [ $base_val -le 26 ]; then
-                        local base_char=$(printf "\\$(printf '%03o' $((base_val + 96)))")
-                        local acento_tipo=$(numero_para_acento "$acento_num")
-
-                        local char=$(aplicar_acento "$base_char" "$acento_tipo" "$em_maiusculas")
-                        resultado="${resultado}${char}"
-                    else
-                        echo "[AVISO] Código de base inválido: $base_num" >&2
-                    fi
-
-                    i=$((i+4))
-                else
-                    # É uma letra normal
-                    if [ $em_maiusculas -eq 1 ]; then
-                        local char=$(printf "\\$(printf '%03o' $((num + 64)))")
-                    else
-                        local char=$(printf "\\$(printf '%03o' $((num + 96)))")
-                    fi
-                    resultado="${resultado}${char}"
-                    i=$((i+2))
+            elif [ $em_acentuados -eq 1 ]; then
+                # É uma letra acentuada - precisa ler 4 dígitos (base + acento)
+                if [ $((i+3)) -ge ${#numeros} ]; then
+                    echo "[ERRO] Bloco acentuado incompleto!" >&2
+                    break
                 fi
-                ;;
-            *)
-                echo "[AVISO] Par inválido ignorado: '$par'" >&2
+
+                local base_num="${numeros:$i:2}"
+                local acento_num="${numeros:$((i+2)):2}"
+
+                # Converte base para letra
+                local base_val=$((10#$base_num))
+                if [ $base_val -ge 1 ] && [ $base_val -le 26 ]; then
+                    local base_char=$(printf "\\$(printf '%03o' $((base_val + 96)))")
+                    local acento_tipo=$(numero_para_acento "$acento_num")
+
+                    local char=$(aplicar_acento "$base_char" "$acento_tipo" "$em_maiusculas")
+                    resultado="${resultado}${char}"
+                else
+                    echo "[AVISO] Código de base inválido: $base_num" >&2
+                fi
+
+                i=$((i+4))
+            else
+                # É uma letra normal
+                if [ $em_maiusculas -eq 1 ]; then
+                    local char=$(printf "\\$(printf '%03o' $((valor_par + 64)))")
+                else
+                    local char=$(printf "\\$(printf '%03o' $((valor_par + 96)))")
+                fi
+                resultado="${resultado}${char}"
                 i=$((i+2))
-                ;;
-        esac
+            fi
+        else
+            echo "[AVISO] Par inválido ignorado: '$par'" >&2
+            i=$((i+2))
+        fi
     done
 
     echo "$resultado"
@@ -473,7 +531,7 @@ descriptografar_sem_chaves() {
 
 # Interface principal
 main() {
-    echo "=== Cripto.sh ==="
+    echo "=== Cripto.sh (v3.0 - Espaço 50-59) ==="
     echo "c: Criptografar | d: Descriptografar | h: Ajuda | q: Sair"
 
     while true; do
@@ -489,11 +547,11 @@ main() {
                     continue
                 fi
 
-#               echo "Primeiro, converter texto para números..."
+                #echo "Primeiro, converter texto para números..."
                 local numeros=$(criptografar_sem_chaves "$texto")
-                echo "Números sem chaves: $numeros"
+                #echo "Números sem chaves: $numeros"
 
-#               echo "Agora, aplicar chaves de criptografia:"
+                echo "apply cript keys:"
                 solicitar_chaves
 
                 local resultado=$(criptografar_com_chaves "$numeros" "$key1" "$key2")
@@ -507,13 +565,13 @@ main() {
                     continue
                 fi
 
-#               echo "Primeiro, remover chaves..."
+                #echo "chaves..."
                 solicitar_chaves
 
                 local numeros=$(descriptografar_com_chaves "$entrada_numeros" "$key1" "$key2")
-#               echo "Números sem chaves: $numeros"
+                #echo "Números sem chaves: $numeros"
 
-#               echo "Agora, converter números para texto..."
+                #echo "Agora, converter números para texto..."
                 local resultado=$(descriptografar_sem_chaves "$numeros")
                 echo "decript: $resultado"
                 ;;
