@@ -1,3 +1,4 @@
+IMPORTANTE!! O ESPAÇO É ENTRE 50-59, E NÃO MAIS 27
 Cripto.sh - Sistema de Criptografia Alfabética com Chaves
 📋 Visão Geral
 
