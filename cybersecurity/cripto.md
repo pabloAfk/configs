@@ -413,3 +413,7 @@ Lembre-se:
 - Para dados sensíveis, use GPG, AES ou outros sistemas profissionais
 
 Divirta-se criptografando! 🔐
+
+PS: a versão que está no cripto.sh é a 3.1, e não 3.0
+diferença: a 3.1 possui um sistema de cópia pra área de transferência usando xclip (instale no seu desktop/server)
+porém com um fallback usando /tmp/ e podendo rodar um cat ou nvim no futuro
