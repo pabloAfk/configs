@@ -3,11 +3,75 @@
 # ============================================================
 # SISTEMA DE CRIPTOGRAFIA HOMOFÔNICA - VERSÃO EXPANDIDA
 # Suporte a caracteres especiais: ( ) " ! ?
+# v3.1 - Adicionado: Cópia para área de transferência
 # ============================================================
 
 POOL="ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789"
 # CARACTERES SUPORTADOS EXPANDIDOS (69 caracteres)
 CHARS="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789 .()\"!?"
+
+# ========== FUNÇÕES DE CÓPIA PARA ÁREA DE TRANSFERÊNCIA ==========
+copiar_para_clipboard() {
+    local texto="$1"
+    local copiado=false
+    
+    # Tenta xclip primeiro (mais comum)
+    if command -v xclip &> /dev/null; then
+        echo -n "$texto" | xclip -selection clipboard 2>/dev/null && copiado=true
+    fi
+    
+    # Se não funcionou, tenta xsel
+    if ! $copiado && command -v xsel &> /dev/null; then
+        echo -n "$texto" | xsel --clipboard 2>/dev/null && copiado=true
+    fi
+    
+    # Se não funcionou, tenta wl-copy (Wayland)
+    if ! $copiado && command -v wl-copy &> /dev/null; then
+        echo -n "$texto" | wl-copy 2>/dev/null && copiado=true
+    fi
+    
+    # Se não funcionou, tenta pbcopy (macOS)
+    if ! $copiado && command -v pbcopy &> /dev/null; then
+        echo -n "$texto" | pbcopy 2>/dev/null && copiado=true
+    fi
+    
+    # Se não funcionou, tenta termux (Android/Termux)
+    if ! $copiado && command -v termux-clipboard-set &> /dev/null; then
+        echo -n "$texto" | termux-clipboard-set 2>/dev/null && copiado=true
+    fi
+    
+    if $copiado; then
+        return 0
+    else
+        return 1
+    fi
+}
+
+verificar_ferramentas_clipboard() {
+    if command -v xclip &> /dev/null || \
+       command -v xsel &> /dev/null || \
+       command -v wl-copy &> /dev/null || \
+       command -v pbcopy &> /dev/null || \
+       command -v termux-clipboard-set &> /dev/null; then
+        return 0
+    else
+        return 1
+    fi
+}
+
+salvar_em_arquivo() {
+    local texto="$1"
+    local arquivo="/tmp/crypto_output_$(date +%s).txt"
+    
+    echo "$texto" > "$arquivo" 2>/dev/null
+    
+    if [ $? -eq 0 ]; then
+        echo "$arquivo"
+        return 0
+    else
+        return 1
+    fi
+}
 
 # ========== GERAÇÃO DE MAPA SEM COLISÕES ==========
 gerar_mapa() {
@@ -328,8 +392,8 @@ main() {
     clear
     echo "╔════════════════════════════════════════════════╗"
     echo "║  SISTEMA DE CRIPTOGRAFIA HOMOFÔNICA           ║"
-    echo "║          Versão Expandida v3.0                ║"
-    echo "║   Suporte a: ( ) \" ! ? e mais caracteres     ║"
+    echo "║          Versão Expandida v3.1                ║"
+    echo "║   Suporte a: ( ) \" ! ? e área de transferência║"
     echo "╚════════════════════════════════════════════════╝"
     echo ""
 
@@ -396,6 +460,38 @@ main() {
                 echo "$cifra"
                 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
                 echo ""
+                
+                # Opção de copiar para área de transferência
+                echo -n "📋 Copiar para área de transferência? (s/N): "
+                read copiar
+                
+                if [ "$copiar" = "s" ] || [ "$copiar" = "S" ]; then
+                    if copiar_para_clipboard "$cifra"; then
+                        echo "✅ Copiado para área de transferência!"
+                    else
+                        echo "⚠️  Não foi possível copiar automaticamente."
+                        echo ""
+                        echo "💡 Alternativas:"
+                        echo "   1. Instale: xclip, xsel ou wl-copy"
+                        echo "   2. Salvar em arquivo temporário"
+                        echo ""
+                        echo -n "   Salvar em arquivo? (s/N): "
+                        read salvar
+                        
+                        if [ "$salvar" = "s" ] || [ "$salvar" = "S" ]; then
+                            arquivo=$(salvar_em_arquivo "$cifra")
+                            if [ $? -eq 0 ]; then
+                                echo "   ✅ Salvo em: $arquivo"
+                                echo "   Use: cat $arquivo | xclip -selection clipboard"
+                                echo "   Ou abra com: vim/nano $arquivo"
+                            else
+                                echo "   ❌ Erro ao salvar arquivo"
+                            fi
+                        fi
+                    fi
+                fi
+                
+                echo ""
                 echo "💡 Dica: Guarde esta cifra e suas chaves!"
                 echo ""
                 read -p "Pressione ENTER..."
@@ -426,6 +522,32 @@ main() {
                 echo "📝 TEXTO DESCRIPTOGRAFADO:"
                 echo "$texto"
                 echo "━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━"
+                echo ""
+                
+                # Opção de copiar texto descriptografado
+                echo -n "📋 Copiar texto descriptografado? (s/N): "
+                read copiar
+                
+                if [ "$copiar" = "s" ] || [ "$copiar" = "S" ]; then
+                    if copiar_para_clipboard "$texto"; then
+                        echo "✅ Copiado para área de transferência!"
+                    else
+                        echo "⚠️  Não foi possível copiar automaticamente."
+                        echo ""
+                        echo -n "   Salvar em arquivo? (s/N): "
+                        read salvar
+                        
+                        if [ "$salvar" = "s" ] || [ "$salvar" = "S" ]; then
+                            arquivo=$(salvar_em_arquivo "$texto")
+                            if [ $? -eq 0 ]; then
+                                echo "   ✅ Salvo em: $arquivo"
+                            else
+                                echo "   ❌ Erro ao salvar arquivo"
+                            fi
+                        fi
+                    fi
+                fi
+                
                 echo ""
                 read -p "Pressione ENTER..."
                 ;;
