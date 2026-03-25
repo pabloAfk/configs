@@ -1,14 +1,44 @@
-thats a dotfile copy im using as IDE
+-- 1. Instala o gerenciador de plugins (lazy.nvim) automaticamente
+-- 
+local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
+if not vim.loop.fs_stat(lazypath) then
+  vim.fn.system({
+    "git", "clone", "--filter=blob:none",
+    "https://github.com/folke/lazy.nvim.git", "--branch=stable", lazypath,
+  })
+end
+vim.opt.rtp:prepend(lazypath)
 
-mkdir -p ~/.config/nvim
+-- 2. Configura os plugins
+require("lazy").setup({
+  -- A barrinha lateral (File Explorer)
+  {
+    "nvim-tree/nvim-tree.lua",
+    dependencies = { "nvim-tree/nvim-web-devicons" },
+    config = function()
+      require("nvim-tree").setup()
+    end
+  },
 
-cd ~/.config/nvim
+  -- A tela inicial personalizada
+  {
+    'nvimdev/dashboard-nvim',
+    event = 'VimEnter',
+    config = function()
+      require('dashboard').setup({
+        theme = 'hyper', -- Um tema bonito e moderno
+        config = {
+          header = { 'NEOVIM' }, -- Você pode colocar uma arte ASCII aqui
+          shortcut = {
+            { desc = '󰊄 Arquivos Recentes', group = '@property', action = 'Telescope oldfiles', key = 'r' },
+            { desc = '󰈞 Buscar Arquivo', group = 'Label', action = 'Telescope find_files', key = 'f' },
+          },
+        },
+      })
+    end,
+    dependencies = { {'nvim-tree/nvim-web-devicons'}}
+  }
+})
 
-# 1. Clonar o repositório (estamos baixando o branch 'macos')
-git clone -b macos https://github.com/pgosar/dotfiles.git /tmp/dotfiles_temp
-
-# 2. Copiar o conteúdo da pasta nvim para o seu diretório de config
-cp -rv /tmp/dotfiles_temp/config/nvim/* ~/.config/nvim/
-
-# 3. Limpar a pasta temporária
-rm -rf /tmp/dotfiles_temp
+-- 3. Atalhos rápidos
+vim.keymap.set('n', '<C-n>', ':NvimTreeToggle<CR>') -- Abre/fecha a barra com Ctrl + n
