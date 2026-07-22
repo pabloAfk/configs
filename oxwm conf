@@ -1,0 +1,211 @@
+---@meta
+-------------------------------------------------------------------------------
+-- OXWM Configuration File
+-------------------------------------------------------------------------------
+
+---Load type definitions for LSP
+---@module 'oxwm'
+
+-------------------------------------------------------------------------------
+-- Variables
+-------------------------------------------------------------------------------
+-- Modifier key: "Mod1" é a tecla Alt
+local modkey = "Mod1"
+
+-- Terminal emulator command
+local terminal = "st"
+
+-- Color palette
+local colors = {
+    fg = "#bbbbbb",
+    red = "#f7768e",
+    bg = "#1a1b26",
+    cyan = "#0db9d7",
+    green = "#9ece6a",
+    lavender = "#a9b1d6",
+    light_blue = "#7aa2f7",
+    grey = "#bbbbbb",
+    blue = "#6dade3",
+    purple = "#ad8ee6",
+}
+
+-- Workspace tags com ícones de Nerd Font (requer pacote font-nerd no Alpine)
+local tags = { "", "󰊯", "", "", "󰙯", "󱇤", "", "󱘶", "󰧮" }
+
+-- Font for the status bar (Nerd Font configurada para exibir ícones)
+local bar_font = "JetBrainsMono Nerd Font:style=Bold:size=10"
+
+-- Define your blocks
+local blocks = {
+    oxwm.bar.block.ram({
+        format = "󰍛 Ram: {used}/{total} GB",
+        interval = 5,
+        color = colors.light_blue,
+        underline = true,
+    }),
+    oxwm.bar.block.static({
+        text = "│",
+        interval = 999999999,
+        color = colors.lavender,
+        underline = false,
+    }),
+    oxwm.bar.block.battery({
+        format = "󰁹 Bat: {}%",
+        charging = "󰂄 Bat: {}%",
+        discharging = "󰂌 Bat: {}%",
+        full = "󰁹 Bat: {}%",
+        interval = 30,
+        color = colors.green,
+        underline = true,
+    }),
+    oxwm.bar.block.static({
+        text = "│",
+        interval = 999999999,
+        color = colors.lavender,
+        underline = false,
+    }),
+    oxwm.bar.block.shell({
+        format = "󰌽 {}",
+        command = "uname -r",
+        interval = 999999999,
+        color = colors.red,
+        underline = true,
+    }),
+    oxwm.bar.block.static({
+        text = "│",
+        interval = 999999999,
+        color = colors.lavender,
+        underline = false,
+    }),
+    oxwm.bar.block.datetime({
+        format = "󰃭 {}",
+        date_format = "%a, %b %d - %-I:%M %P",
+        interval = 1,
+        color = colors.cyan,
+        underline = true,
+    }),
+};
+
+-------------------------------------------------------------------------------
+-- Basic Settings
+-------------------------------------------------------------------------------
+oxwm.set_terminal(terminal)
+oxwm.set_modkey(modkey)
+oxwm.set_tags(tags)
+
+-------------------------------------------------------------------------------
+-- Layouts
+-------------------------------------------------------------------------------
+oxwm.set_layout_symbol("tiling", "[T]")
+oxwm.set_layout_symbol("normie", "[F]")
+oxwm.set_layout_symbol("tabbed", "[=]")
+
+-------------------------------------------------------------------------------
+-- Appearance
+-------------------------------------------------------------------------------
+oxwm.border.set_width(2)
+oxwm.border.set_focused_color(colors.blue)
+oxwm.border.set_unfocused_color(colors.grey)
+
+oxwm.set_floating_position("center")
+
+oxwm.gaps.set_smart(true)
+oxwm.gaps.set_inner(5, 5)
+oxwm.gaps.set_outer(5, 5)
+
+-------------------------------------------------------------------------------
+-- Status Bar Configuration
+-------------------------------------------------------------------------------
+oxwm.bar.set_font(bar_font)
+oxwm.bar.set_blocks(blocks)
+
+oxwm.bar.set_scheme_normal(colors.fg, colors.bg, "#444444")
+oxwm.bar.set_scheme_occupied(colors.cyan, colors.bg, colors.cyan)
+oxwm.bar.set_scheme_selected(colors.cyan, colors.bg, colors.purple)
+oxwm.bar.set_scheme_urgent(colors.red, colors.bg, colors.red)
+
+-------------------------------------------------------------------------------
+-- Keybindings
+-------------------------------------------------------------------------------
+
+-- Terminal no Alt + A
+oxwm.key.bind({ modkey }, "A", oxwm.spawn_terminal())
+
+-- Launch Dmenu
+oxwm.key.bind({ modkey }, "D", oxwm.spawn({ "sh", "-c", "dmenu_run -l 10" }))
+-- Screenshot
+oxwm.key.bind({ modkey }, "S", oxwm.spawn({ "sh", "-c", "maim -s | xclip -selection clipboard -t image/png" }))
+-- Fechar janela focada
+oxwm.key.bind({ modkey }, "Q", oxwm.client.kill())
+
+-- Overlay de atalhos
+oxwm.key.bind({ modkey, "Shift" }, "Slash", oxwm.show_keybinds())
+
+-- Toggles de Estado da Janela
+oxwm.key.bind({ modkey, "Shift" }, "F", oxwm.client.toggle_fullscreen())
+-- Alternar janela entre Flutuante e Tiling
+oxwm.key.bind({ modkey, "Shift" }, "Space", oxwm.client.toggle_floating())
+
+-- Layouts
+oxwm.key.bind({ modkey }, "F", oxwm.layout.set("normie"))
+oxwm.key.bind({ modkey }, "C", oxwm.layout.set("tiling"))
+oxwm.key.bind({ modkey }, "N", oxwm.layout.cycle())
+
+-- Ajustar tamanho no Tiling (Master Factor)
+oxwm.key.bind({ modkey }, "H", oxwm.set_master_factor(-5))
+oxwm.key.bind({ modkey }, "L", oxwm.set_master_factor(5))
+
+-- Permitir redimensionar tiling com o mouse sem virar float
+oxwm.tiled_resize_mode(true)
+
+oxwm.key.bind({ modkey }, "I", oxwm.inc_num_master(1))
+oxwm.key.bind({ modkey }, "P", oxwm.inc_num_master(-1))
+
+-- Toggle Bar
+oxwm.key.bind({ modkey }, "B", oxwm.toggle_bar())
+
+-- Controles do OXWM
+oxwm.key.bind({ modkey, "Shift" }, "Q", oxwm.quit())
+oxwm.key.bind({ modkey, "Shift" }, "R", oxwm.restart())
+
+-------------------------------------------------------------------------------
+-- Navegação com Setas e Vim Keys
+-------------------------------------------------------------------------------
+
+-- Mudar foco da janela (Alt + Setas ou Alt + J/K)
+oxwm.key.bind({ modkey }, "Down", oxwm.client.focus_stack(1))
+oxwm.key.bind({ modkey }, "Up", oxwm.client.focus_stack(-1))
+oxwm.key.bind({ modkey }, "J", oxwm.client.focus_stack(1))
+oxwm.key.bind({ modkey }, "K", oxwm.client.focus_stack(-1))
+
+-- Trocar posição das janelas de lugar (Alt + Ctrl + Setas ou Alt + Shift + J/K)
+oxwm.key.bind({ modkey, "Control" }, "Down", oxwm.client.move_stack(1))
+oxwm.key.bind({ modkey, "Control" }, "Up", oxwm.client.move_stack(-1))
+oxwm.key.bind({ modkey, "Shift" }, "J", oxwm.client.move_stack(1))
+oxwm.key.bind({ modkey, "Shift" }, "K", oxwm.client.move_stack(-1))
+
+-- Mover janela focada para outro monitor/workspace (Alt + Shift + Setas)
+oxwm.key.bind({ modkey, "Shift" }, "Left", oxwm.monitor.tag(-1))
+oxwm.key.bind({ modkey, "Shift" }, "Right", oxwm.monitor.tag(1))
+
+-- Navegação tradicional entre workspaces (Alt + NÚMERO)
+oxwm.key.bind({ modkey }, "1", oxwm.tag.view(0))
+oxwm.key.bind({ modkey }, "2", oxwm.tag.view(1))
+oxwm.key.bind({ modkey }, "3", oxwm.tag.view(2))
+oxwm.key.bind({ modkey }, "4", oxwm.tag.view(3))
+oxwm.key.bind({ modkey }, "5", oxwm.tag.view(4))
+oxwm.key.bind({ modkey }, "6", oxwm.tag.view(5))
+oxwm.key.bind({ modkey }, "7", oxwm.tag.view(6))
+oxwm.key.bind({ modkey }, "8", oxwm.tag.view(7))
+oxwm.key.bind({ modkey }, "9", oxwm.tag.view(8))
+
+-- Mover janela para o workspace N (Alt + Shift + NÚMERO)
+oxwm.key.bind({ modkey, "Shift" }, "1", oxwm.tag.move_to(0))
+oxwm.key.bind({ modkey, "Shift" }, "2", oxwm.tag.move_to(1))
+oxwm.key.bind({ modkey, "Shift" }, "3", oxwm.tag.move_to(2))
+oxwm.key.bind({ modkey, "Shift" }, "4", oxwm.tag.move_to(3))
+oxwm.key.bind({ modkey, "Shift" }, "5", oxwm.tag.move_to(4))
+oxwm.key.bind({ modkey, "Shift" }, "6", oxwm.tag.move_to(5))
+oxwm.key.bind({ modkey, "Shift" }, "7", oxwm.tag.move_to(6))
+oxwm.key.bind({ modkey, "Shift" }, "8", oxwm.tag.move_to(7))
+oxwm.key.bind({ modkey, "Shift" }, "9", oxwm.tag.move_to(8))
