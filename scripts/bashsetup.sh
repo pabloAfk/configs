@@ -249,10 +249,15 @@ create_env() {
 
 # EDITOR
 # export EDITOR="vim"
-# export VISUAL="vim"
+# export EDITOR="nvim"
+# export EDITOR="nano"
+# export EDITOR="emacs"
+# export EDITOR="micro"
+# export EDITOR="vi"
 
 # PAGER
 # export PAGER="less"
+# export PAGER="more"
 
 # PATH
 # export PATH="$HOME/.local/bin:$PATH"
