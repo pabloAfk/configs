@@ -1,10 +1,6 @@
 #!/usr/bin/env bash
 
-# script de bash pra criar uma pasta
-# /home/user/.bashrc.d
-# que modula o .bashrc
-# com controle automático
- ==============================================================================
+# ==============================================================================
 # bashsetup - Modular Bash Configuration Manager
 # ==============================================================================
 #
@@ -296,6 +292,8 @@ ${c}alias la='ls -la --color=auto'
 ${c}alias ls='ls --color=auto'
 ${c}alias ..='cd ..'
 ${c}alias ...='cd ../..'
+${c}alias ....='cd ../../..'
+${c}alias .....='cd ../../../..'
 
 # SEGURANÇA
 ${c}alias rm='rm -i'
@@ -356,12 +354,12 @@ create_functions() {
 # bak() {
 #     local timestamp
 #     timestamp=$(date +%Y%m%d_%H%M%S)
-
+# 
 #     [ $# -eq 0 ] && {
 #         echo "Uso: bak <arquivo>"
 #         return 1
 #     }
-
+# 
 #     for item in "$@"; do
 #         if [ -e "$item" ]; then
 #             cp -r "$item" "${item}.bak.${timestamp}"
@@ -376,7 +374,7 @@ create_functions() {
 #         echo "✗ Arquivo '$1' não encontrado"
 #         return 1
 #     fi
-
+# 
 #     case "$1" in
 #         *.tar.bz2) tar xjf "$1" ;;
 #         *.tar.gz)  tar xzf "$1" ;;
@@ -396,6 +394,53 @@ create_functions() {
 # PORTAS
 # ports() {
 #     sudo ss -tulanp 2>/dev/null | grep LISTEN | sort -n
+# }
+
+# LISTA ARQUIVOS POR TAMANHO
+# ls-size() {
+#     du -sh * | sort -hr
+# }
+
+# PROCURA EM ARQUIVOS
+# grep-files() {
+#     if [ $# -lt 2 ]; then
+#         echo "Uso: grep-files <padrão> <diretório>"
+#         return 1
+#     fi
+#     grep -r --color=auto "$1" "$2"
+# }
+
+# MONTA E DESMONTA
+# mount-iso() {
+#     if [ $# -lt 2 ]; then
+#         echo "Uso: mount-iso <arquivo.iso> <ponto_montagem>"
+#         return 1
+#     fi
+#     sudo mount -o loop "$1" "$2"
+# }
+
+# TEMPO DE EXECUÇÃO
+# time-cmd() {
+#     time "$@"
+# }
+
+# CRIA BACKUP COMPLETO DO DIRETÓRIO
+# backup-dir() {
+#     local dir="${1:-.}"
+#     local timestamp=$(date +%Y%m%d_%H%M%S)
+#     local backup_name="backup_${dir}_${timestamp}.tar.gz"
+#     tar -czf "$backup_name" "$dir"
+#     echo "✓ Backup criado: $backup_name"
+# }
+
+# MOSTRA INFORMAÇÕES DO SISTEMA
+# sysinfo() {
+#     echo "=== INFORMAÇÕES DO SISTEMA ==="
+#     echo "Kernel: $(uname -r)"
+#     echo "Distro: $(lsb_release -ds 2>/dev/null || cat /etc/os-release | grep PRETTY_NAME | cut -d= -f2)"
+#     echo "Uptime: $(uptime -p)"
+#     echo "Memória: $(free -h | grep Mem | awk '{print $3 "/" $2}')"
+#     echo "Disco: $(df -h / | grep / | awk '{print $3 "/" $2}')"
 # }
 
 EOF
@@ -514,6 +559,16 @@ cmd_select_editor() {
         "nano"
         "emacs"
         "micro"
+        "ne"
+        "gedit"
+        "code"
+        "subl"
+        "atom"
+        "kate"
+        "leafpad"
+        "geany"
+        "mousepad"
+        "vi"
     )
 
     local editor
