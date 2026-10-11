@@ -19,6 +19,14 @@
 #
 # ==============================================================================
 
+# tutorial pq eu sempre esqueço como inicia kkkkkkk
+
+# primeiro copia esse script em /usr/local/bin/bashsetup
+# depois doas chmod +x nele (dá perm)
+# bashsetup --gen-config
+# aí edita as coisas no ~/.bashrc.d
+# e baixa o resto (--completion por exemplo)
+
 set -Eeuo pipefail
 
 # ==============================================================================
