@@ -319,6 +319,7 @@ ${c}alias e='exit'
 ${c}alias h='history'
 ${c}alias reload='source ~/.bashrc && echo "✓ Bashrc recarregado!"'
 ${c}alias cf='clear && fastfetch'
+${c}alias ff='fastfetch'
 
 # MONITORAMENTO
 ${c}alias df='df -h'
