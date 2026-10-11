@@ -1,4 +1,4 @@
-# cd .config/qterminal xx/colorschemes/
+# cd .config/qterminal xx/color-schemes/
 # touch Monochrome.colorscheme
 # colar o arquivo aqui embaixo
 # ir em preferencias - aparencia e escolher no proprio qterm
